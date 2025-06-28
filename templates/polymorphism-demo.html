@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polymorphism Demo - OOP (CMPE 103) Learning Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a2e;
+            --accent-violet: #6c5ce7;
+            --accent-purple: #a29bfe;
+            --text-light: #ffffff;
+            --text-muted: #e2e8f0;
+            --card-bg: rgba(26, 26, 46, 0.95);
+            --border-color: rgba(108, 92, 231, 0.3);
+            --polymorphism-color: #6c5ce7;
+        }
+
+        body {
+            background: var(--primary-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(108, 92, 231, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(108, 92, 231, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 46, 0.98) !important;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .navbar-brand, .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--polymorphism-color) !important;
+        }
+
+        .demo-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--polymorphism-color) 100%);
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 30px 30px;
+        }
+
+        .renderer-demo {
+            background: rgba(108, 92, 231, 0.1);
+            border: 2px solid var(--polymorphism-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .renderer-card {
+            background: rgba(108, 92, 231, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .renderer-card:hover {
+            background: rgba(108, 92, 231, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.3);
+        }
+
+        .renderer-card.active {
+            background: rgba(108, 92, 231, 0.3);
+            border-color: var(--polymorphism-color);
+            box-shadow: 0 0 20px rgba(108, 92, 231, 0.5);
+        }
+
+        .output-display {
+            background: #1e1e2e;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            min-height: 300px;
+        }
+
+        .json-output { color: #98d8c8; }
+        .html-output { color: #f7dc6f; }
+        .xml-output { color: #f1948a; }
+
+        .data-input {
+            background: rgba(108, 92, 231, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .code-example {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        .btn-primary {
+            background: var(--polymorphism-color);
+            border-color: var(--polymorphism-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+        }
+
+        .navigation-controls {
+            background: rgba(108, 92, 231, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .logo-svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--accent-violet);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-light) !important;
+        }
+
+        p, li, span {
+            color: var(--text-light);
+        }
+
+        .form-control, .form-select, .form-control:focus {
+            background: rgba(26, 26, 46, 0.9);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+        }
+
+        .form-control:focus {
+            border-color: var(--polymorphism-color);
+            box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.25);
+        }
+
+        .alert-custom {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 500px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+        }
+
+        .same-interface {
+            background: rgba(108, 92, 231, 0.1);
+            border: 2px dashed var(--polymorphism-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 9.739 9 11 5.16-1.261 9-5.45 9-11V7l-10-5z"/>
+                    <path d="M8 11l2 2 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+                OOP (CMPE 103) Learning Platform
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="bi bi-shuffle" style="color: var(--polymorphism-color);"></i>
+                Polymorphism Interactive Demo
+            </h1>
+            <p class="lead">See how the same interface produces different outputs</p>
+            <div class="badge bg-primary fs-6 px-3 py-2">Interactive Learning Experience</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="demo-container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <h3 class="mb-4">🔄 Universal Renderer Demo</h3>
+                    <p class="lead">
+                        Watch how the same data gets transformed into different formats using polymorphic renderers. 
+                        Same method call, completely different results!
+                    </p>
+
+                    <!-- Data Input Section -->
+                    <div class="data-input">
+                        <h5><i class="bi bi-database"></i> Input Data</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Sample Data Type:</label>
+                                <select class="form-select" id="dataType" onchange="updateSampleData()">
+                                    <option value="user">User Profile</option>
+                                    <option value="product">Product Info</option>
+                                    <option value="order">Order Details</option>
+                                    <option value="custom">Custom Data</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Custom JSON (if selected):</label>
+                                <textarea class="form-control" id="customData" rows="3" placeholder='{"name": "John", "age": 25}'></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Same Interface Demonstration -->
+                    <div class="same-interface">
+                        <h6>🎯 Same Interface, Different Behavior</h6>
+                        <code>renderer.render(data) → Different Output Formats</code>
+                    </div>
+
+                    <!-- Renderer Selection -->
+                    <div class="renderer-demo">
+                        <h5 class="mb-3">🎨 Choose Your Renderer</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="renderer-card" data-renderer="json" onclick="selectRenderer('json')">
+                                    <div class="text-center">
+                                        <i class="bi bi-filetype-json" style="font-size: 3rem; color: #00d4aa;"></i>
+                                        <h6 class="mt-2">JSON Renderer</h6>
+                                        <p class="small">Structured data format</p>
+                                        <code class="small">JsonRenderer.render()</code>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="renderer-card" data-renderer="html" onclick="selectRenderer('html')">
+                                    <div class="text-center">
+                                        <i class="bi bi-filetype-html" style="font-size: 3rem; color: #fdcb6e;"></i>
+                                        <h6 class="mt-2">HTML Renderer</h6>
+                                        <p class="small">Web markup format</p>
+                                        <code class="small">HtmlRenderer.render()</code>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="renderer-card" data-renderer="xml" onclick="selectRenderer('xml')">
+                                    <div class="text-center">
+                                        <i class="bi bi-filetype-xml" style="font-size: 3rem; color: #e84393;"></i>
+                                        <h6 class="mt-2">XML Renderer</h6>
+                                        <p class="small">Markup language format</p>
+                                        <code class="small">XmlRenderer.render()</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <button class="btn btn-primary" onclick="renderData()">
+                                <i class="bi bi-play-circle"></i> Render Data
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Output Display -->
+                    <div class="output-display" id="outputDisplay">
+                        <div class="text-center text-muted">
+                            <i class="bi bi-arrow-up" style="font-size: 2rem;"></i>
+                            <p>Select a renderer above and click "Render Data" to see polymorphism in action!</p>
+                        </div>
+                    </div>
+
+                    <!-- Code Implementation -->
+                    <h4 class="mt-5 mb-3">📝 How Polymorphism Works</h4>
+                    <div class="code-example">
+# Base renderer interface
+class BaseRenderer:
+    def render(self, data):
+        pass  # Abstract method
+
+# Different implementations of the same interface
+class JsonRenderer(BaseRenderer):
+    def render(self, data):
+        return json.dumps(data, indent=2)
+
+class HtmlRenderer(BaseRenderer):
+    def render(self, data):
+        html = "&lt;table class='table'&gt;"
+        for key, value in data.items():
+            html += f"&lt;tr&gt;&lt;td&gt;{key}&lt;/td&gt;&lt;td&gt;{value}&lt;/td&gt;&lt;/tr&gt;"
+        html += "&lt;/table&gt;"
+        return html
+
+class XmlRenderer(BaseRenderer):
+    def render(self, data):
+        xml = "&lt;?xml version='1.0'?&gt;&lt;data&gt;"
+        for key, value in data.items():
+            xml += f"&lt;{key}&gt;{value}&lt;/{key}&gt;"
+        xml += "&lt;/data&gt;"
+        return xml
+
+# Polymorphism in action - same interface, different behavior
+def process_data(data, renderer_type):
+    renderers = {
+        'json': JsonRenderer(),
+        'html': HtmlRenderer(),
+        'xml': XmlRenderer()
+    }
+    
+    renderer = renderers[renderer_type]  # Get the right renderer
+    return renderer.render(data)         # Same method call!
+                    </div>
+
+                    <!-- Benefits Section -->
+                    <div class="renderer-demo">
+                        <h4 class="mb-3">🎯 Polymorphism Benefits</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="renderer-card">
+                                    <h6>🔄 Flexibility</h6>
+                                    <p class="small">Easy to add new renderers without changing existing code</p>
+                                </div>
+                                <div class="renderer-card">
+                                    <h6>🔧 Maintainability</h6>
+                                    <p class="small">Changes to one renderer don't affect others</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="renderer-card">
+                                    <h6>📈 Extensibility</h6>
+                                    <p class="small">New output formats can be added easily</p>
+                                </div>
+                                <div class="renderer-card">
+                                    <h6>♻️ Code Reuse</h6>
+                                    <p class="small">Same client code works with all renderers</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Controls -->
+                    <div class="navigation-controls">
+                        <h5 class="mb-3">🧭 Continue Your Learning Journey</h5>
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <a href="/polymorphism-guide" class="btn btn-outline-light w-100">
+                                    <i class="bi bi-book"></i> Study Guide
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="/encapsulation-demo" class="btn btn-outline-light w-100">
+                                    <i class="bi bi-shield-lock"></i> Encapsulation Demo
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="/inheritance-demo" class="btn btn-outline-light w-100">
+                                    <i class="bi bi-diagram-3"></i> Inheritance Demo
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="/abstraction-demo" class="btn btn-primary w-100">
+                                    <i class="bi bi-layers"></i> Abstraction Demo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let selectedRenderer = 'json';
+        let currentData = {};
+
+        const sampleData = {
+            user: {
+                id: 12345,
+                name: "John Doe",
+                email: "john.doe@email.com",
+                role: "Student",
+                course: "Computer Science",
+                gpa: 3.85,
+                active: true
+            },
+            product: {
+                id: "PROD-001",
+                name: "Wireless Headphones",
+                price: 199.99,
+                category: "Electronics",
+                inStock: true,
+                rating: 4.5,
+                reviews: 1247
+            },
+            order: {
+                orderId: "ORD-2024-001",
+                customer: "Jane Smith",
+                items: 3,
+                total: 299.97,
+                status: "Shipped",
+                date: "2024-01-15",
+                priority: "Standard"
+            }
+        };
+
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show alert-custom`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        function updateSampleData() {
+            const dataType = document.getElementById('dataType').value;
+            
+            if (dataType === 'custom') {
+                document.getElementById('customData').style.display = 'block';
+                currentData = {};
+            } else {
+                document.getElementById('customData').style.display = 'none';
+                currentData = sampleData[dataType];
+            }
+        }
+
+        function selectRenderer(renderer) {
+            // Remove active class from all cards
+            document.querySelectorAll('.renderer-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to selected card
+            document.querySelector(`[data-renderer="${renderer}"]`).classList.add('active');
+            
+            selectedRenderer = renderer;
+            showAlert(`🎨 Selected ${renderer.toUpperCase()} renderer`, 'info');
+        }
+
+        function renderData() {
+            const dataType = document.getElementById('dataType').value;
+            
+            if (dataType === 'custom') {
+                try {
+                    currentData = JSON.parse(document.getElementById('customData').value || '{}');
+                } catch (e) {
+                    showAlert('❌ Invalid JSON format in custom data', 'danger');
+                    return;
+                }
+            }
+
+            if (Object.keys(currentData).length === 0) {
+                showAlert('❌ No data to render', 'warning');
+                return;
+            }
+
+            const output = document.getElementById('outputDisplay');
+            let renderedOutput = '';
+            let outputClass = '';
+
+            switch (selectedRenderer) {
+                case 'json':
+                    renderedOutput = JSON.stringify(currentData, null, 2);
+                    outputClass = 'json-output';
+                    break;
+                
+                case 'html':
+                    renderedOutput = `&lt;table class="table table-striped"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Property&lt;/th&gt;
+      &lt;th&gt;Value&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;`;
+                    
+                    for (const [key, value] of Object.entries(currentData)) {
+                        renderedOutput += `
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;${key}&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;${value}&lt;/td&gt;
+    &lt;/tr&gt;`;
+                    }
+                    
+                    renderedOutput += `
+  &lt;/tbody&gt;
+&lt;/table&gt;`;
+                    outputClass = 'html-output';
+                    break;
+                
+                case 'xml':
+                    renderedOutput = `&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;data&gt;`;
+                    
+                    for (const [key, value] of Object.entries(currentData)) {
+                        renderedOutput += `
+  &lt;${key}&gt;${value}&lt;/${key}&gt;`;
+                    }
+                    
+                    renderedOutput += `
+&lt;/data&gt;`;
+                    outputClass = 'xml-output';
+                    break;
+            }
+
+            output.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6><i class="bi bi-code-square"></i> ${selectedRenderer.toUpperCase()} Output</h6>
+                    <small class="text-muted">renderer.render(data)</small>
+                </div>
+                <pre class="${outputClass}">${renderedOutput}</pre>
+            `;
+
+            showAlert(`✅ Data rendered using ${selectedRenderer.toUpperCase()} renderer!`, 'success');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSampleData();
+            selectRenderer('json');
+        });
+    </script>
+</body>
+</html>

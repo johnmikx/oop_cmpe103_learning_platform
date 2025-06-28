@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encapsulation Guide - OOP (CMPE 103) Learning Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a2e;
+            --accent-violet: #6c5ce7;
+            --text-light: #ffffff;
+            --text-muted: #e2e8f0;
+            --card-bg: rgba(26, 26, 46, 0.95);
+            --border-color: rgba(108, 92, 231, 0.3);
+            --encapsulation-color: #00d4aa;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: var(--primary-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 212, 170, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 170, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: none;
+            padding: 0 15px;
+        }
+
+        .container-fluid {
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 46, 0.98) !important;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+            width: 100%;
+        }
+
+        .navbar-brand, .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--encapsulation-color) 100%);
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 30px 30px;
+            width: 100%;
+        }
+
+        .guide-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .code-example {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            position: relative;
+            line-height: 1.8;
+            white-space: pre;
+            width: 100%;
+        }
+
+        .code-example::before {
+            content: 'PYTHON';
+            position: absolute;
+            top: 0.8rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(0, 212, 170, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .code-line {
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        .keyword { color: #c792ea; font-weight: 600; }
+        .string { color: #a3f7bf; }
+        .comment { color: #676e95; font-style: italic; }
+        .function { color: #82aaff; font-weight: 500; }
+        .class-name { color: #ffcb6b; font-weight: 600; }
+        .number { color: #f78c6c; }
+        .operator { color: #89ddff; }
+        .builtin { color: #f07178; }
+
+        .highlight-box {
+            background: rgba(0, 212, 170, 0.15);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--encapsulation-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            width: 100%;
+        }
+
+        .pareto-focus {
+            background: linear-gradient(135deg, var(--encapsulation-color), #00b894);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            color: black;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--encapsulation-color);
+            border-color: var(--encapsulation-color);
+            color: black;
+            font-weight: bold;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+        }
+
+        .btn-outline-light {
+            border-color: var(--text-muted);
+            color: var(--text-light);
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+            width: 100%;
+        }
+
+        .progress-step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-violet);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 1rem;
+            position: relative;
+        }
+
+        .progress-step.active {
+            background: var(--encapsulation-color);
+            color: black;
+            box-shadow: 0 0 20px rgba(0, 212, 170, 0.5);
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 2rem;
+            height: 2px;
+            background: var(--border-color);
+            transform: translateY(-50%);
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-light) !important;
+        }
+
+        p, li, span {
+            color: var(--text-light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 3rem 0;
+            }
+            
+            .guide-container {
+                padding: 2rem;
+                margin: 1rem 0;
+            }
+            
+            .code-example {
+                font-size: 0.8rem;
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container, .container-fluid {
+                padding: 0 10px;
+            }
+            
+            .hero-section {
+                padding: 2rem 0;
+            }
+            
+            .guide-container {
+                padding: 1.5rem;
+            }
+            
+            .code-example {
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="bi bi-shield-shaded"></i> OOP (CMPE 103) Learning Platform
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container-fluid text-center">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="bi bi-shield-lock" style="color: var(--encapsulation-color);"></i>
+                Encapsulation Mastery
+            </h1>
+            <p class="lead">Learn to protect data and control access through private attributes</p>
+            <div class="badge bg-success text-dark fs-6 px-3 py-2">Essential Concept #1</div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="progress-indicator">
+            <div class="progress-step active">1</div>
+            <div class="progress-step">2</div>
+            <div class="progress-step">3</div>
+            <div class="progress-step">4</div>
+        </div>
+
+        <div class="pareto-focus">
+            <h3 class="mb-3">🎯 80/20 Focus: What Really Matters</h3>
+            <p class="lead mb-0">
+                Master these 3 encapsulation patterns and you'll handle 80% of real-world scenarios:
+                <strong>Private attributes (__), Getter/Setter methods, and Data validation</strong>
+            </p>
+        </div>
+
+        <div class="guide-container">
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="mb-4">What is Encapsulation?</h3>
+                    <p class="lead">
+                        Encapsulation is the practice of bundling data and methods together while restricting 
+                        direct access to internal data. It's like putting your valuables in a safe - you control 
+                        who can access them and how.
+                    </p>
+
+                    <div class="highlight-box">
+                        <h5><i class="bi bi-lightbulb text-warning"></i> Real-World Analogy</h5>
+                        <p class="mb-0">
+                            Think of encapsulation like an ATM machine. You can't directly access the cash inside, 
+                            but you can use the provided interface (keypad, card slot) to perform operations like 
+                            withdrawing money, checking balance, etc. The internal mechanisms are hidden and protected.
+                        </p>
+                    </div>
+
+                    <h4 class="mt-5 mb-3">Essential Python Implementation</h4>
+                    <div class="code-example"><span class="keyword">class</span> <span class="class-name">BankAccount</span>:
+    <span class="comment">"""
+    Encapsulation Example: Private attributes with controlled access
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, account_number, initial_balance<span class="operator">=</span><span class="number">0</span>):
+        <span class="comment"># Private attributes (name mangling with __)</span>
+        <span class="keyword">self</span>.__account_number <span class="operator">=</span> account_number
+        <span class="keyword">self</span>.__balance <span class="operator">=</span> initial_balance
+        <span class="keyword">self</span>.__transactions <span class="operator">=</span> []
+    
+    <span class="comment"># Getter methods (controlled read access)</span>
+    <span class="keyword">def</span> <span class="function">get_balance</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Public method to access private balance"""</span>
+        <span class="keyword">return</span> <span class="keyword">self</span>.__balance
+    
+    <span class="keyword">def</span> <span class="function">get_account_number</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Public method to access private account number"""</span>
+        <span class="keyword">return</span> <span class="keyword">self</span>.__account_number
+    
+    <span class="comment"># Controlled modification with validation</span>
+    <span class="keyword">def</span> <span class="function">deposit</span>(<span class="keyword">self</span>, amount):
+        <span class="comment">"""Public method to modify balance with validation"""</span>
+        <span class="keyword">if</span> amount <span class="operator"><=</span> <span class="number">0</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Deposit amount must be positive"</span>)
+        
+        <span class="keyword">self</span>.__balance <span class="operator">+=</span> amount
+        <span class="keyword">self</span>.__add_transaction(<span class="string">"Deposit"</span>, amount)
+        <span class="keyword">return</span> <span class="keyword">True</span>
+    
+    <span class="keyword">def</span> <span class="function">withdraw</span>(<span class="keyword">self</span>, amount):
+        <span class="comment">"""Public method with business logic validation"""</span>
+        <span class="keyword">if</span> amount <span class="operator"><=</span> <span class="number">0</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Withdrawal amount must be positive"</span>)
+        
+        <span class="keyword">if</span> amount <span class="operator">></span> <span class="keyword">self</span>.__balance:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Insufficient funds"</span>)
+        
+        <span class="keyword">self</span>.__balance <span class="operator">-=</span> amount
+        <span class="keyword">self</span>.__add_transaction(<span class="string">"Withdrawal"</span>, <span class="operator">-</span>amount)
+        <span class="keyword">return</span> <span class="keyword">True</span>
+    
+    <span class="comment"># Private helper method (internal implementation)</span>
+    <span class="keyword">def</span> <span class="function">__add_transaction</span>(<span class="keyword">self</span>, transaction_type, amount):
+        <span class="comment">"""Private method - hidden from outside access"""</span>
+        transaction <span class="operator">=</span> {
+            <span class="string">'type'</span>: transaction_type,
+            <span class="string">'amount'</span>: amount,
+            <span class="string">'balance_after'</span>: <span class="keyword">self</span>.__balance
+        }
+        <span class="keyword">self</span>.__transactions.<span class="function">append</span>(transaction)
+    
+    <span class="keyword">def</span> <span class="function">get_transaction_history</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Controlled access to transaction history"""</span>
+        <span class="keyword">return</span> <span class="keyword">self</span>.__transactions.<span class="function">copy</span>()
+
+<span class="comment"># Usage Example</span>
+account <span class="operator">=</span> <span class="class-name">BankAccount</span>(<span class="string">"12345"</span>, <span class="number">1000</span>)
+
+<span class="comment"># ✅ Correct usage - through public interface</span>
+<span class="builtin">print</span>(<span class="string">f"Balance: ${account.get_balance()}"</span>)
+account.<span class="function">deposit</span>(<span class="number">500</span>)
+account.<span class="function">withdraw</span>(<span class="number">200</span>)
+
+<span class="comment"># ❌ This would fail - direct access to private attributes</span>
+<span class="comment"># print(account.__balance)  # AttributeError</span>
+
+<span class="comment"># ✅ Controlled access works</span>
+<span class="builtin">print</span>(<span class="string">f"Final balance: ${account.get_balance()}"</span>)</div>
+
+                    <h4 class="mt-5 mb-3">Key Benefits of Encapsulation</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i><strong>Data Protection:</strong> Prevents unauthorized access to sensitive data</li>
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i><strong>Validation:</strong> Ensures data integrity through controlled modification</li>
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i><strong>Maintainability:</strong> Internal implementation can change without affecting external code</li>
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i><strong>Security:</strong> Hides implementation details from users</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <h5><i class="bi bi-exclamation-triangle text-warning"></i> Key Insight</h5>
+                        <p class="mb-0">
+                            Encapsulation is about creating a contract. The public methods define what users can do, 
+                            while private attributes and methods handle the internal implementation. This separation 
+                            allows you to change how things work internally without breaking external code.
+                        </p>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <a href="/" class="btn btn-outline-light me-3">
+                            <i class="bi bi-arrow-left"></i> Back to Dashboard
+                        </a>
+                        <a href="/inheritance-guide" class="btn btn-primary">
+                            Next: Inheritance <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP (CMPE 103) Learning Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a2e;
+            --accent-violet: #6c5ce7;
+            --accent-purple: #a29bfe;
+            --text-light: #ffffff;
+            --text-muted: #e2e8f0;
+            --card-bg: rgba(26, 26, 46, 0.95);
+            --border-color: rgba(108, 92, 231, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: var(--primary-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(108, 92, 231, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(108, 92, 231, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: none;
+            padding: 0 15px;
+        }
+
+        .container-fluid {
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 46, 0.98) !important;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+            width: 100%;
+        }
+
+        .navbar-brand, .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--accent-violet) 100%);
+            padding: 5rem 0;
+            margin-bottom: 3rem;
+            border-radius: 0 0 30px 30px;
+            width: 100%;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #00d4aa 0%, #ff6b9d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+
+        .stats-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .stats-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--accent-violet);
+        }
+
+        .pillars-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 3rem;
+            margin: 3rem 0;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .pillar-card {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            height: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .pillar-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-violet), var(--accent-purple));
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(108, 92, 231, 0.2);
+        }
+
+        .pillar-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .encapsulation { color: #00d4aa; }
+        .inheritance { color: #ff6b9d; }
+        .polymorphism { color: #a29bfe; }
+        .abstraction { color: #fdcb6e; }
+
+        .btn-guide {
+            background: transparent;
+            border: 2px solid var(--text-light);
+            color: var(--text-light);
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-guide:hover {
+            background: var(--text-light);
+            color: var(--primary-dark);
+        }
+
+        .cta-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 4rem;
+            margin: 3rem 0;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--accent-violet);
+            border-color: var(--accent-violet);
+            padding: 1rem 3rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .learning-path {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 3rem;
+            margin: 3rem 0;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .path-step {
+            background: rgba(108, 92, 231, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .path-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer {
+            background: var(--secondary-dark);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 4rem;
+            color: var(--text-muted);
+            width: 100%;
+        }
+
+        .logo-svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--accent-violet);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-light) !important;
+        }
+
+        .pareto-highlight {
+            background: linear-gradient(135deg, var(--accent-violet), var(--accent-purple));
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            color: white;
+            width: 100%;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 3rem 0;
+            }
+            
+            .display-3 {
+                font-size: 2.5rem;
+            }
+            
+            .pillars-section, .learning-path, .cta-section {
+                padding: 2rem;
+                margin: 2rem 0;
+            }
+            
+            .stats-number {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .hero-section {
+                padding: 2rem 0;
+            }
+            
+            .display-3 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/">
+                <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 9.739 9 11 5.16-1.261 9-5.45 9-11V7l-10-5z"/>
+                    <path d="M8 11l2 2 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+                OOP (CMPE 103) Learning Platform
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="#pillars">
+                    <i class="bi bi-book"></i> Study Guides
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container-fluid text-center">
+            <h1 class="display-3 fw-bold mb-4">
+                Master <span class="gradient-text">Object-Oriented<br>Programming</span>
+            </h1>
+            <p class="lead mb-4">
+                Learn the four pillars of OOP using the Pareto Principle - master 80% of concepts with 20% of the effort through focused study guides.
+            </p>
+            <div class="row justify-content-center">
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="stats-card">
+                        <div class="stats-number">4</div>
+                        <div>Core Pillars</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="stats-card">
+                        <div class="stats-number">80%</div>
+                        <div>Efficiency Focus</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="pareto-highlight">
+            <h3 class="mb-3">🎯 80/20 Learning Approach</h3>
+            <p class="lead mb-0">
+                Focus on the 20% of OOP concepts that give you 80% of the programming power. 
+                Master these four pillars efficiently through our curated study guides.
+            </p>
+        </div>
+
+        <section id="pillars" class="pillars-section">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">
+                    <i class="bi bi-columns-gap"></i> The Four Pillars of Object-Oriented Programming
+                </h2>
+                <p class="lead">Master these fundamental concepts to become proficient in OOP</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="pillar-card">
+                        <div class="text-center">
+                            <i class="bi bi-shield-lock pillar-icon encapsulation"></i>
+                            <h4 class="fw-bold mb-3">Encapsulation</h4>
+                            <p class="mb-4">Data protection and controlled access through private attributes and public methods.</p>
+                            <a href="/encapsulation-guide" class="btn btn-guide">
+                                <i class="bi bi-book"></i> Study Guide
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="pillar-card">
+                        <div class="text-center">
+                            <i class="bi bi-diagram-3 pillar-icon inheritance"></i>
+                            <h4 class="fw-bold mb-3">Inheritance</h4>
+                            <p class="mb-4">Code reuse and hierarchical relationships between classes.</p>
+                            <a href="/inheritance-guide" class="btn btn-guide">
+                                <i class="bi bi-book"></i> Study Guide
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="pillar-card">
+                        <div class="text-center">
+                            <i class="bi bi-shuffle pillar-icon polymorphism"></i>
+                            <h4 class="fw-bold mb-3">Polymorphism</h4>
+                            <p class="mb-4">Same interface, different implementations - flexibility through method overriding.</p>
+                            <a href="/polymorphism-guide" class="btn btn-guide">
+                                <i class="bi bi-book"></i> Study Guide
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="pillar-card">
+                        <div class="text-center">
+                            <i class="bi bi-layers pillar-icon abstraction"></i>
+                            <h4 class="fw-bold mb-3">Abstraction</h4>
+                            <p class="mb-4">Hide complexity behind simple interfaces and abstract base classes.</p>
+                            <a href="/abstraction-guide" class="btn btn-guide">
+                                <i class="bi bi-book"></i> Study Guide
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="learning-path">
+            <div class="text-center mb-5">
+                <h2 class="display-6 fw-bold mb-3">
+                    <i class="bi bi-rocket-takeoff"></i> Optimized Learning Path
+                </h2>
+                <p class="lead">Follow this sequence for maximum efficiency using the Pareto Principle</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-3 col-sm-6">
+                    <div class="path-step">
+                        <i class="bi bi-book path-icon" style="color: #00d4aa;"></i>
+                        <h5>1. Study Guides</h5>
+                        <p class="small">Comprehensive learning materials focused on essential concepts</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="path-step">
+                        <i class="bi bi-lightbulb path-icon" style="color: #ff6b9d;"></i>
+                        <h5>2. Core Concepts</h5>
+                        <p class="small">Master the 20% of concepts that give 80% of the results</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="path-step">
+                        <i class="bi bi-code-slash path-icon" style="color: #a29bfe;"></i>
+                        <h5>3. Apply Knowledge</h5>
+                        <p class="small">Practice with real-world examples and coding patterns</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="path-step">
+                        <i class="bi bi-trophy path-icon" style="color: #fdcb6e;"></i>
+                        <h5>4. Master OOP</h5>
+                        <p class="small">Achieve proficiency in object-oriented programming</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2 class="display-6 fw-bold mb-4">Ready to Master OOP?</h2>
+            <p class="lead mb-4">Start your efficient learning journey with our optimized study guides!</p>
+            <a href="/encapsulation-guide" class="btn btn-primary btn-lg me-3">
+                <i class="bi bi-shield-lock"></i> Start with Encapsulation
+            </a>
+        </section>
+    </div>
+
+    <footer class="footer bg-light py-4">
+        <div class="container-fluid text-center">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <h5 class="fw-bold">Student Information</h5>
+                    <p class="small">
+                        🥷 <strong class="text-primary">John Mike Asuncion</strong><br>
+                        1st Year Computer Engineering
+                    </p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <h5 class="fw-bold">Course Information</h5>
+                    <p class="small">
+                        Course: CMPE 103 - Object-Oriented Programming<br>
+                        Professor: <strong class="text-success">Engr. Danilo C. Madrigalejos, Jr.</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="my-3">
+                <!-- Social Icons -->
+                <a href="https://www.linkedin.com/in/your-link-here" target="_blank" class="mx-2 text-decoration-none text-dark" title="LinkedIn">
+                    <i class="fab fa-linkedin fa-lg"></i>
+                </a>
+                <a href="https://github.com/your-username-here" target="_blank" class="mx-2 text-decoration-none text-dark" title="GitHub">
+                    <i class="fab fa-github fa-lg"></i>
+                </a>
+            </div>
+
+            <hr class="my-3">
+            <p class="small mb-0">&copy; 2025 OOP Learning Platform.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

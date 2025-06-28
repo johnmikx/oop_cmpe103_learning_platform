@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inheritance Guide - OOP (CMPE 103) Learning Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a2e;
+            --accent-violet: #6c5ce7;
+            --text-light: #ffffff;
+            --text-muted: #e2e8f0;
+            --card-bg: rgba(26, 26, 46, 0.95);
+            --border-color: rgba(108, 92, 231, 0.3);
+            --inheritance-color: #ff6b9d;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: var(--primary-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 107, 157, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 107, 157, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: none;
+            padding: 0 15px;
+        }
+
+        .container-fluid {
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 46, 0.98) !important;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+            width: 100%;
+        }
+
+        .navbar-brand, .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--inheritance-color) 100%);
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 30px 30px;
+            width: 100%;
+        }
+
+        .guide-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .code-example {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            position: relative;
+            line-height: 1.8;
+            white-space: pre;
+            width: 100%;
+        }
+
+        .code-example::before {
+            content: 'PYTHON';
+            position: absolute;
+            top: 0.8rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(255, 107, 157, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .keyword { color: #c792ea; font-weight: 600; }
+        .string { color: #a3f7bf; }
+        .comment { color: #676e95; font-style: italic; }
+        .function { color: #82aaff; font-weight: 500; }
+        .class-name { color: #ffcb6b; font-weight: 600; }
+        .number { color: #f78c6c; }
+        .operator { color: #89ddff; }
+        .builtin { color: #f07178; }
+
+        .highlight-box {
+            background: rgba(255, 107, 157, 0.15);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--inheritance-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            width: 100%;
+        }
+
+        .pareto-focus {
+            background: linear-gradient(135deg, var(--inheritance-color), #e84393);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--inheritance-color);
+            border-color: var(--inheritance-color);
+            color: white;
+            font-weight: bold;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+        }
+
+        .btn-outline-light {
+            border-color: var(--text-muted);
+            color: var(--text-light);
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+            width: 100%;
+        }
+
+        .progress-step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-violet);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 1rem;
+            position: relative;
+        }
+
+        .progress-step.active {
+            background: var(--inheritance-color);
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 2rem;
+            height: 2px;
+            background: var(--border-color);
+            transform: translateY(-50%);
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        .hierarchy-diagram {
+            background: rgba(255, 107, 157, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 3rem;
+            margin: 2rem 0;
+            position: relative;
+            width: 100%;
+        }
+
+        .concept-map {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .parent-node {
+            background: linear-gradient(135deg, var(--inheritance-color), #e84393);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+        }
+
+        .children-level {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .child-node {
+            background: rgba(255, 107, 157, 0.2);
+            border: 2px solid var(--inheritance-color);
+            color: var(--text-light);
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .child-node::before {
+            content: '';
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 2rem;
+            background: var(--inheritance-color);
+        }
+
+        .grandchild-node {
+            background: rgba(255, 107, 157, 0.1);
+            border: 1px solid var(--inheritance-color);
+            color: var(--text-light);
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .grandchild-node::before {
+            content: '';
+            position: absolute;
+            top: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 1.5rem;
+            background: var(--inheritance-color);
+        }
+
+        .connection-line {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--inheritance-color), transparent);
+            margin: -1rem 0;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-light) !important;
+        }
+
+        p, li, span {
+            color: var(--text-light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 3rem 0;
+            }
+            
+            .guide-container {
+                padding: 2rem;
+                margin: 1rem 0;
+            }
+            
+            .code-example {
+                font-size: 0.8rem;
+                padding: 1.5rem;
+            }
+            
+            .children-level {
+                gap: 1rem;
+            }
+            
+            .parent-node {
+                font-size: 1rem;
+                padding: 0.8rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container, .container-fluid {
+                padding: 0 10px;
+            }
+            
+            .hero-section {
+                padding: 2rem 0;
+            }
+            
+            .guide-container {
+                padding: 1.5rem;
+            }
+            
+            .code-example {
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+            
+            .children-level {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="bi bi-shield-shaded"></i> OOP (CMPE 103) Learning Platform
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container-fluid text-center">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="bi bi-diagram-3" style="color: var(--inheritance-color);"></i>
+                Inheritance Mastery
+            </h1>
+            <p class="lead">Learn to create hierarchical relationships and reuse code efficiently</p>
+            <div class="badge bg-danger text-white fs-6 px-3 py-2">Essential Concept #2</div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="progress-indicator">
+            <div class="progress-step">1</div>
+            <div class="progress-step active">2</div>
+            <div class="progress-step">3</div>
+            <div class="progress-step">4</div>
+        </div>
+
+        <div class="pareto-focus">
+            <h3 class="mb-3">🎯 80/20 Focus: What Really Matters</h3>
+            <p class="lead mb-0">
+                Master these 3 inheritance patterns and you'll handle 80% of real-world scenarios:
+                <strong>Base classes, Method overriding, and super() calls</strong>
+            </p>
+        </div>
+
+        <div class="guide-container">
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="mb-4">What is Inheritance?</h3>
+                    <p class="lead">
+                        Inheritance allows a class to inherit attributes and methods from another class. 
+                        It creates a parent-child relationship where the child class gets all the functionality 
+                        of the parent class and can add or modify behavior as needed.
+                    </p>
+
+                    <div class="highlight-box">
+                        <h5><i class="bi bi-lightbulb text-warning"></i> Real-World Analogy</h5>
+                        <p class="mb-0">
+                            Think of inheritance like family traits. A child inherits characteristics from their parents 
+                            (eye color, height) but can also have their own unique features. In programming, a child class 
+                            inherits methods and attributes from a parent class but can add its own functionality.
+                        </p>
+                    </div>
+
+                    <div class="hierarchy-diagram">
+                        <h5 class="text-center mb-4">Class Hierarchy Concept Map</h5>
+                        <div class="concept-map">
+                            <div class="parent-node">
+                                Vehicle (Parent Class)
+                            </div>
+                            
+                            <div class="connection-line"></div>
+                            
+                            <div class="children-level">
+                                <div class="child-node">Car</div>
+                                <div class="child-node">Motorcycle</div>
+                                <div class="child-node">Truck</div>
+                            </div>
+                            
+                            <div class="connection-line"></div>
+                            
+                            <div class="children-level">
+                                <div class="grandchild-node">ElectricCar</div>
+                                <div class="grandchild-node">SportsCar</div>
+                                <div class="grandchild-node">SportBike</div>
+                            </div>
+                        </div>
+                        <p class="text-center mt-3 small">
+                            <i class="bi bi-info-circle"></i> Each level inherits all properties and methods from levels above
+                        </p>
+                    </div>
+
+                    <h4 class="mt-5 mb-3">Essential Python Implementation</h4>
+                    <div class="code-example"><span class="keyword">class</span> <span class="class-name">Vehicle</span>:
+    <span class="comment">"""
+    Base class (Parent) - defines common attributes and methods
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, brand, model, year):
+        <span class="keyword">self</span>.brand <span class="operator">=</span> brand
+        <span class="keyword">self</span>.model <span class="operator">=</span> model
+        <span class="keyword">self</span>.year <span class="operator">=</span> year
+        <span class="keyword">self</span>.is_running <span class="operator">=</span> <span class="keyword">False</span>
+    
+    <span class="keyword">def</span> <span class="function">start_engine</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Common method inherited by all vehicles"""</span>
+        <span class="keyword">self</span>.is_running <span class="operator">=</span> <span class="keyword">True</span>
+        <span class="keyword">return</span> <span class="string">f"{self.brand} {self.model} engine started!"</span>
+    
+    <span class="keyword">def</span> <span class="function">stop_engine</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Common method inherited by all vehicles"""</span>
+        <span class="keyword">self</span>.is_running <span class="operator">=</span> <span class="keyword">False</span>
+        <span class="keyword">return</span> <span class="string">f"{self.brand} {self.model} engine stopped!"</span>
+    
+    <span class="keyword">def</span> <span class="function">get_info</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Base implementation - can be overridden"""</span>
+        <span class="keyword">return</span> <span class="string">f"{self.year} {self.brand} {self.model}"</span>
+
+<span class="keyword">class</span> <span class="class-name">Car</span>(<span class="class-name">Vehicle</span>):
+    <span class="comment">"""
+    Child class that inherits from Vehicle
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, brand, model, year, doors):
+        <span class="comment"># Call parent constructor using super()</span>
+        <span class="builtin">super</span>().<span class="function">__init__</span>(brand, model, year)
+        <span class="comment"># Add car-specific attribute</span>
+        <span class="keyword">self</span>.doors <span class="operator">=</span> doors
+    
+    <span class="keyword">def</span> <span class="function">get_info</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Override parent method with car-specific info"""</span>
+        base_info <span class="operator">=</span> <span class="builtin">super</span>().<span class="function">get_info</span>()  <span class="comment"># Get parent's implementation</span>
+        <span class="keyword">return</span> <span class="string">f"{base_info} - {self.doors} doors"</span>
+    
+    <span class="keyword">def</span> <span class="function">honk</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Car-specific method"""</span>
+        <span class="keyword">return</span> <span class="string">f"{self.brand} {self.model} goes BEEP BEEP!"</span>
+
+<span class="keyword">class</span> <span class="class-name">Motorcycle</span>(<span class="class-name">Vehicle</span>):
+    <span class="comment">"""
+    Another child class with different specialization
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, brand, model, year, engine_size):
+        <span class="builtin">super</span>().<span class="function">__init__</span>(brand, model, year)
+        <span class="keyword">self</span>.engine_size <span class="operator">=</span> engine_size
+    
+    <span class="keyword">def</span> <span class="function">get_info</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Override with motorcycle-specific info"""</span>
+        base_info <span class="operator">=</span> <span class="builtin">super</span>().<span class="function">get_info</span>()
+        <span class="keyword">return</span> <span class="string">f"{base_info} - {self.engine_size}cc"</span>
+    
+    <span class="keyword">def</span> <span class="function">wheelie</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Motorcycle-specific method"""</span>
+        <span class="keyword">return</span> <span class="string">f"{self.brand} {self.model} does a wheelie!"</span>
+
+<span class="keyword">class</span> <span class="class-name">ElectricCar</span>(<span class="class-name">Car</span>):
+    <span class="comment">"""
+    Multi-level inheritance: ElectricCar inherits from Car, 
+    which inherits from Vehicle
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, brand, model, year, doors, battery_capacity):
+        <span class="builtin">super</span>().<span class="function">__init__</span>(brand, model, year, doors)
+        <span class="keyword">self</span>.battery_capacity <span class="operator">=</span> battery_capacity
+        <span class="keyword">self</span>.charge_level <span class="operator">=</span> <span class="number">100</span>
+    
+    <span class="keyword">def</span> <span class="function">start_engine</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Override to provide electric-specific behavior"""</span>
+        <span class="keyword">self</span>.is_running <span class="operator">=</span> <span class="keyword">True</span>
+        <span class="keyword">return</span> <span class="string">f"{self.brand} {self.model} electric motor activated silently!"</span>
+    
+    <span class="keyword">def</span> <span class="function">charge</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Electric car specific method"""</span>
+        <span class="keyword">self</span>.charge_level <span class="operator">=</span> <span class="number">100</span>
+        <span class="keyword">return</span> <span class="string">f"{self.brand} {self.model} fully charged!"</span>
+    
+    <span class="keyword">def</span> <span class="function">get_info</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Override with electric car info"""</span>
+        base_info <span class="operator">=</span> <span class="builtin">super</span>().<span class="function">get_info</span>()
+        <span class="keyword">return</span> <span class="string">f"{base_info} - {self.battery_capacity}kWh battery"</span>
+
+<span class="comment"># Usage Examples</span>
+car <span class="operator">=</span> <span class="class-name">Car</span>(<span class="string">"Toyota"</span>, <span class="string">"Camry"</span>, <span class="number">2023</span>, <span class="number">4</span>)
+motorcycle <span class="operator">=</span> <span class="class-name">Motorcycle</span>(<span class="string">"Honda"</span>, <span class="string">"CBR600"</span>, <span class="number">2023</span>, <span class="number">600</span>)
+electric_car <span class="operator">=</span> <span class="class-name">ElectricCar</span>(<span class="string">"Tesla"</span>, <span class="string">"Model 3"</span>, <span class="number">2023</span>, <span class="number">4</span>, <span class="number">75</span>)
+
+<span class="comment"># All inherit common methods from Vehicle</span>
+vehicles <span class="operator">=</span> [car, motorcycle, electric_car]
+
+<span class="keyword">for</span> vehicle <span class="keyword">in</span> vehicles:
+    <span class="builtin">print</span>(vehicle.<span class="function">get_info</span>())
+    <span class="builtin">print</span>(vehicle.<span class="function">start_engine</span>())</div>
+
+                    <h4 class="mt-5 mb-3">Key Benefits of Inheritance</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i><strong>Code Reuse:</strong> Avoid duplicating common functionality</li>
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i><strong>Hierarchical Organization:</strong> Create logical relationships between classes</li>
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i><strong>Extensibility:</strong> Add new functionality while keeping existing code</li>
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i><strong>Polymorphism Support:</strong> Enables treating different objects uniformly</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <h5><i class="bi bi-exclamation-triangle text-warning"></i> Key Insight</h5>
+                        <p class="mb-0">
+                            Inheritance creates an "is-a" relationship. A Car IS-A Vehicle, a Motorcycle IS-A Vehicle. 
+                            Use super() to call parent methods and avoid code duplication. Override methods when you need 
+                            specialized behavior for child classes.
+                        </p>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <a href="/encapsulation-guide" class="btn btn-outline-light me-3">
+                            <i class="bi bi-arrow-left"></i> Previous: Encapsulation
+                        </a>
+                        <a href="/polymorphism-guide" class="btn btn-primary">
+                            Next: Polymorphism <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

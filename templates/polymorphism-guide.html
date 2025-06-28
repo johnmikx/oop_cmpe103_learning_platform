@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polymorphism Guide - OOP (CMPE 103) Learning Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a2e;
+            --accent-violet: #6c5ce7;
+            --text-light: #ffffff;
+            --text-muted: #e2e8f0;
+            --card-bg: rgba(26, 26, 46, 0.95);
+            --border-color: rgba(108, 92, 231, 0.3);
+            --polymorphism-color: #a29bfe;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: var(--primary-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(162, 155, 254, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(162, 155, 254, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: none;
+            padding: 0 15px;
+        }
+
+        .container-fluid {
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 46, 0.98) !important;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+            width: 100%;
+        }
+
+        .navbar-brand, .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--polymorphism-color) 100%);
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 30px 30px;
+            width: 100%;
+        }
+
+        .guide-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .code-example {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            position: relative;
+            line-height: 1.8;
+            white-space: pre;
+            width: 100%;
+        }
+
+        .code-example::before {
+            content: 'PYTHON';
+            position: absolute;
+            top: 0.8rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(162, 155, 254, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .keyword { color: #c792ea; font-weight: 600; }
+        .string { color: #a3f7bf; }
+        .comment { color: #676e95; font-style: italic; }
+        .function { color: #82aaff; font-weight: 500; }
+        .class-name { color: #ffcb6b; font-weight: 600; }
+        .number { color: #f78c6c; }
+        .operator { color: #89ddff; }
+        .builtin { color: #f07178; }
+
+        .highlight-box {
+            background: rgba(162, 155, 254, 0.15);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--polymorphism-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            width: 100%;
+        }
+
+        .pareto-focus {
+            background: linear-gradient(135deg, var(--polymorphism-color), #6c5ce7);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--polymorphism-color);
+            border-color: var(--polymorphism-color);
+            color: white;
+            font-weight: bold;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+        }
+
+        .btn-outline-light {
+            border-color: var(--text-muted);
+            color: var(--text-light);
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+            width: 100%;
+        }
+
+        .progress-step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-violet);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 1rem;
+            position: relative;
+        }
+
+        .progress-step.active {
+            background: var(--polymorphism-color);
+            color: white;
+            box-shadow: 0 0 20px rgba(162, 155, 254, 0.5);
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 2rem;
+            height: 2px;
+            background: var(--border-color);
+            transform: translateY(-50%);
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        .types-overview {
+            background: rgba(162, 155, 254, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            width: 100%;
+        }
+
+        .type-card {
+            background: rgba(162, 155, 254, 0.2);
+            border: 1px solid var(--polymorphism-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .type-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(162, 155, 254, 0.2);
+        }
+
+        .type-icon {
+            font-size: 2rem;
+            color: var(--polymorphism-color);
+            margin-bottom: 1rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-light) !important;
+        }
+
+        p, li, span {
+            color: var(--text-light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 3rem 0;
+            }
+            
+            .guide-container {
+                padding: 2rem;
+                margin: 1rem 0;
+            }
+            
+            .code-example {
+                font-size: 0.8rem;
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container, .container-fluid {
+                padding: 0 10px;
+            }
+            
+            .hero-section {
+                padding: 2rem 0;
+            }
+            
+            .guide-container {
+                padding: 1.5rem;
+            }
+            
+            .code-example {
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="bi bi-shield-shaded"></i> OOP (CMPE 103) Learning Platform
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container-fluid text-center">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="bi bi-shuffle" style="color: var(--polymorphism-color);"></i>
+                Polymorphism Mastery
+            </h1>
+            <p class="lead">Learn to use the same interface for different implementations</p>
+            <div class="badge bg-primary text-white fs-6 px-3 py-2">Essential Concept #3</div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="progress-indicator">
+            <div class="progress-step">1</div>
+            <div class="progress-step">2</div>
+            <div class="progress-step active">3</div>
+            <div class="progress-step">4</div>
+        </div>
+
+        <div class="pareto-focus">
+            <h3 class="mb-3">🎯 80/20 Focus: What Really Matters</h3>
+            <p class="lead mb-0">
+                Master these 3 polymorphism patterns and you'll handle 80% of real-world scenarios:
+                <strong>Method overriding, Duck typing, and Interface consistency</strong>
+            </p>
+        </div>
+
+        <div class="guide-container">
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="mb-4">What is Polymorphism?</h3>
+                    <p class="lead">
+                        Polymorphism means "many forms" - it allows objects of different types to be treated 
+                        uniformly through a common interface. The same method name can behave differently 
+                        based on the object type that calls it.
+                    </p>
+
+                    <div class="highlight-box">
+                        <h5><i class="bi bi-lightbulb text-warning"></i> Real-World Analogy</h5>
+                        <p class="mb-0">
+                            Think of a universal remote control. The "play" button works the same way whether 
+                            you're controlling a TV, DVD player, or streaming device. Each device responds 
+                            differently to "play", but the interface (the button) remains consistent.
+                        </p>
+                    </div>
+
+                    <div class="types-overview">
+                        <h5 class="text-center mb-4">Three Types of Polymorphism</h5>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12">
+                                <div class="type-card text-center">
+                                    <i class="bi bi-arrow-repeat type-icon"></i>
+                                    <h6 class="fw-bold">Method Overriding</h6>
+                                    <p class="small mb-0">Child classes provide specific implementations of parent methods</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="type-card text-center">
+                                    <i class="bi bi-layers type-icon"></i>
+                                    <h6 class="fw-bold">Method Overloading</h6>
+                                    <p class="small mb-0">Same method name with different parameters (limited in Python)</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="type-card text-center">
+                                    <i class="bi bi-magic type-icon"></i>
+                                    <h6 class="fw-bold">Duck Typing</h6>
+                                    <p class="small mb-0">"If it walks like a duck and quacks like a duck, it's a duck"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="mt-5 mb-3">Essential Python Implementation</h4>
+                    <div class="code-example"><span class="keyword">class</span> <span class="class-name">Animal</span>:
+    <span class="comment">"""
+    Base class defining the common interface
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, name):
+        <span class="keyword">self</span>.name <span class="operator">=</span> name
+    
+    <span class="keyword">def</span> <span class="function">make_sound</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Base method to be overridden by subclasses"""</span>
+        <span class="keyword">return</span> <span class="string">f"{self.name} makes a sound"</span>
+    
+    <span class="keyword">def</span> <span class="function">move</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Another method for polymorphic behavior"""</span>
+        <span class="keyword">return</span> <span class="string">f"{self.name} moves"</span>
+
+<span class="keyword">class</span> <span class="class-name">Dog</span>(<span class="class-name">Animal</span>):
+    <span class="comment">"""
+    Dog implementation with specific behavior
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">make_sound</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Override with dog-specific sound"""</span>
+        <span class="keyword">return</span> <span class="string">f"{self.name} barks: Woof! Woof!"</span>
+    
+    <span class="keyword">def</span> <span class="function">move</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Override with dog-specific movement"""</span>
+        <span class="keyword">return</span> <span class="string">f"{self.name} runs on four legs"</span>
+
+<span class="keyword">class</span> <span class="class-name">Cat</span>(<span class="class-name">Animal</span>):
+    <span class="comment">"""
+    Cat implementation with different behaviors
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">make_sound</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Override with cat-specific sound"""</span>
+        <span class="keyword">return</span> <span class="string">f"{self.name} meows: Meow! Meow!"</span>
+    
+    <span class="keyword">def</span> <span class="function">move</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Override with cat-specific movement"""</span>
+        <span class="keyword">return</span> <span class="string">f"{self.name} prowls silently"</span>
+
+<span class="keyword">class</span> <span class="class-name">Bird</span>(<span class="class-name">Animal</span>):
+    <span class="comment">"""
+    Bird implementation with unique behaviors
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">make_sound</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Override with bird-specific sound"""</span>
+        <span class="keyword">return</span> <span class="string">f"{self.name} chirps: Tweet! Tweet!"</span>
+    
+    <span class="keyword">def</span> <span class="function">move</span>(<span class="keyword">self</span>):
+        <span class="comment">"""Override with bird-specific movement"""</span>
+        <span class="keyword">return</span> <span class="string">f"{self.name} flies through the air"</span>
+
+<span class="comment"># Polymorphism in action</span>
+<span class="keyword">def</span> <span class="function">animal_concert</span>(animals):
+    <span class="comment">"""
+    This function demonstrates polymorphism:
+    Same method calls, different behaviors based on object type
+    """</span>
+    <span class="builtin">print</span>(<span class="string">"Welcome to the Animal Concert!\n"</span>)
+    
+    <span class="keyword">for</span> animal <span class="keyword">in</span> animals:
+        <span class="comment"># Same interface, different implementations</span>
+        <span class="builtin">print</span>(<span class="string">f"Sound: {animal.make_sound()}"</span>)
+        <span class="builtin">print</span>(<span class="string">f"Movement: {animal.move()}"</span>)
+        <span class="builtin">print</span>(<span class="string">"-" * 40</span>)
+
+<span class="comment"># Create different animal objects</span>
+animals <span class="operator">=</span> [
+    <span class="class-name">Dog</span>(<span class="string">"Buddy"</span>),
+    <span class="class-name">Cat</span>(<span class="string">"Whiskers"</span>),
+    <span class="class-name">Bird</span>(<span class="string">"Tweety"</span>),
+    <span class="class-name">Dog</span>(<span class="string">"Rex"</span>),
+    <span class="class-name">Cat</span>(<span class="string">"Mittens"</span>)
+]
+
+<span class="comment"># Polymorphism: treat all animals the same way</span>
+<span class="function">animal_concert</span>(animals)
+
+<span class="comment"># Advanced Polymorphism Example: Different data processors</span>
+<span class="keyword">class</span> <span class="class-name">DataProcessor</span>:
+    <span class="comment">"""
+    Base class for data processing
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">process</span>(<span class="keyword">self</span>, data):
+        <span class="comment">"""To be overridden by subclasses"""</span>
+        <span class="keyword">raise</span> <span class="builtin">NotImplementedError</span>(<span class="string">"Subclasses must implement process method"</span>)
+
+<span class="keyword">class</span> <span class="class-name">JSONProcessor</span>(<span class="class-name">DataProcessor</span>):
+    <span class="comment">"""
+    Process data as JSON
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">process</span>(<span class="keyword">self</span>, data):
+        <span class="keyword">import</span> json
+        <span class="keyword">return</span> json.<span class="function">dumps</span>(data, indent<span class="operator">=</span><span class="number">2</span>)
+
+<span class="keyword">class</span> <span class="class-name">XMLProcessor</span>(<span class="class-name">DataProcessor</span>):
+    <span class="comment">"""
+    Process data as XML
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">process</span>(<span class="keyword">self</span>, data):
+        xml <span class="operator">=</span> <span class="string">"&lt;data&gt;\n"</span>
+        <span class="keyword">for</span> key, value <span class="keyword">in</span> data.<span class="function">items</span>():
+            xml <span class="operator">+=</span> <span class="string">f"  &lt;{key}&gt;{value}&lt;/{key}&gt;\n"</span>
+        xml <span class="operator">+=</span> <span class="string">"&lt;/data&gt;"</span>
+        <span class="keyword">return</span> xml
+
+<span class="keyword">class</span> <span class="class-name">CSVProcessor</span>(<span class="class-name">DataProcessor</span>):
+    <span class="comment">"""
+    Process data as CSV
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">process</span>(<span class="keyword">self</span>, data):
+        headers <span class="operator">=</span> <span class="string">","</span>.<span class="function">join</span>(data.<span class="function">keys</span>())
+        values <span class="operator">=</span> <span class="string">","</span>.<span class="function">join</span>(<span class="builtin">str</span>(v) <span class="keyword">for</span> v <span class="keyword">in</span> data.<span class="function">values</span>())
+        <span class="keyword">return</span> <span class="string">f"{headers}\n{values}"</span>
+
+<span class="comment"># Polymorphic function works with any DataProcessor</span>
+<span class="keyword">def</span> <span class="function">export_data</span>(processor, data):
+    <span class="comment">"""
+    Polymorphic function: same interface (process method), 
+    different outputs
+    """</span>
+    <span class="keyword">return</span> processor.<span class="function">process</span>(data)
+
+<span class="comment"># Sample data</span>
+sample_data <span class="operator">=</span> { <span class="string">"name"</span>: <span class="string">"John Doe"</span>, <span class="string">"age"</span>: <span class="number">30</span>, <span class="string">"city"</span>: <span class="string">"New York"</span> }
+
+<span class="comment"># Polymorphism: same function call, different results</span>
+processors <span class="operator">=</span> [
+    <span class="class-name">JSONProcessor</span>(),
+    <span class="class-name">XMLProcessor</span>(),
+    <span class="class-name">CSVProcessor</span>()
+]
+
+<span class="builtin">print</span>(<span class="string">"=== DATA PROCESSING POLYMORPHISM ==="</span>)
+<span class="keyword">for</span> processor <span class="keyword">in</span> processors:
+    processor_name <span class="operator">=</span> processor.<span class="builtin">__class__</span>.<span class="builtin">__name__</span>
+    result <span class="operator">=</span> <span class="function">export_data</span>(processor, sample_data)
+    <span class="builtin">print</span>(<span class="string">f"\n{processor_name} Output:"</span>)
+    <span class="builtin">print</span>(result)</div>
+
+                    <h4 class="mt-5 mb-3">Key Benefits of Polymorphism</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i><strong>Flexibility:</strong> Write code that works with multiple object types</li>
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i><strong>Extensibility:</strong> Add new types without changing existing code</li>
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i><strong>Maintainability:</strong> Reduce code duplication and improve organization</li>
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i><strong>Interface Consistency:</strong> Same method names across different implementations</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <h5><i class="bi bi-exclamation-triangle text-warning"></i> Key Insight</h5>
+                        <p class="mb-0">
+                            Polymorphism enables you to write functions that work with any object that implements 
+                            the expected interface. This makes your code more flexible and easier to extend. 
+                            Focus on consistent method names and signatures across related classes.
+                        </p>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <a href="/inheritance-guide" class="btn btn-outline-light me-3">
+                            <i class="bi bi-arrow-left"></i> Previous: Inheritance
+                        </a>
+                        <a href="/abstraction-guide" class="btn btn-primary">
+                            Next: Abstraction <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

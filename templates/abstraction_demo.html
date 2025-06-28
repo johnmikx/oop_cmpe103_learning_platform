@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abstraction Demo - OOP Python Web App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-mortarboard"></i>
+                OOP Student Management
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center mb-4">
+                    <i class="bi bi-layers text-warning"></i>
+                    Abstraction Demo
+                </h1>
+                <p class="lead text-center text-muted">
+                    Different DataService implementations using the same abstract interface
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">
+                            <i class="bi bi-person-badge"></i>
+                            StudentDataService
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>User Count:</strong> {{ student_count }}</p>
+                        <p><strong>Implementation:</strong> Manages student-specific data with course tracking</p>
+                        
+                        <h6>Students in System:</h6>
+                        {% if students %}
+                        <ul class="list-group list-group-flush">
+                            {% for student in students %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ student.get_name() }}
+                                <span class="badge bg-primary rounded-pill">{{ student.get_course() }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">No students found</p>
+                        {% endif %}
+                        
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <strong>Abstract Methods Implemented:</strong><br>
+                                • add_user() - Student-specific validation<br>
+                                • get_user_by_username() - Student search logic<br>
+                                • validate_user_data() - Course requirement checks
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-info text-white">
+                        <h4 class="mb-0">
+                            <i class="bi bi-person-workspace"></i>
+                            TeacherDataService
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>User Count:</strong> {{ teacher_count }}</p>
+                        <p><strong>Implementation:</strong> Manages teacher-specific data with department tracking</p>
+                        
+                        <h6>Teachers in System:</h6>
+                        {% if teachers %}
+                        <ul class="list-group list-group-flush">
+                            {% for teacher in teachers %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ teacher.get_name() }}
+                                <span class="badge bg-info rounded-pill">{{ teacher.get_department() }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">No teachers found</p>
+                        {% endif %}
+                        
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <strong>Abstract Methods Implemented:</strong><br>
+                                • add_user() - Teacher-specific validation<br>
+                                • get_user_by_username() - Teacher search logic<br>
+                                • validate_user_data() - Department requirement checks
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h4 class="mb-0">
+                            <i class="bi bi-code-square"></i>
+                            Abstraction Explanation
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <strong>Abstraction</strong> is demonstrated here through the <code>DataService</code> abstract base class:
+                        </p>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Abstract Base Class (DataService):</h6>
+                                <ul>
+                                    <li>Defines common interface with abstract methods</li>
+                                    <li>Provides concrete methods that use abstract ones</li>
+                                    <li>Hides implementation complexity from users</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Concrete Implementations:</h6>
+                                <ul>
+                                    <li><strong>StudentDataService:</strong> Student-specific logic</li>
+                                    <li><strong>TeacherDataService:</strong> Teacher-specific logic</li>
+                                    <li>Both implement the same interface differently</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info mt-3">
+                            <h6><i class="bi bi-lightbulb"></i> Key Abstraction Benefits:</h6>
+                            <ul class="mb-0">
+                                <li><strong>Same Interface:</strong> Both services use identical method signatures</li>
+                                <li><strong>Hidden Complexity:</strong> Internal data structures and validation logic are hidden</li>
+                                <li><strong>Interchangeable:</strong> Services can be swapped without changing client code</li>
+                                <li><strong>Extensible:</strong> New service types can be added easily</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <h6>Code Example:</h6>
+                            <pre class="bg-light p-3 rounded"><code># Same interface, different implementations
+student_service = StudentDataService()
+teacher_service = TeacherDataService()
+
+# Both respond to the same method calls
+student_count = student_service.get_user_count()  # Student-specific logic
+teacher_count = teacher_service.get_user_count()  # Teacher-specific logic</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced OOP Python Web App - Advanced Student Management</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        .oop-pillar {
+            border-left: 4px solid #007bff;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .oop-pillar:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .encapsulation { border-left-color: #28a745; }
+        .abstraction { border-left-color: #ffc107; }
+        .inheritance { border-left-color: #dc3545; }
+        .polymorphism { border-left-color: #6f42c1; }
+        .design-patterns { border-left-color: #17a2b8; }
+        
+        .user-card {
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .user-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .pillar-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .pillar-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        .feature-badge {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            margin: 0.2rem;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .pillar-icon {
+                font-size: 2rem;
+            }
+        }
+        
+        .code-snippet {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .enhancement-badge {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Enhanced Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="bi bi-cpu"></i>
+                Enhanced OOP System
+                <span class="enhancement-badge ms-2">v2.0</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="bi bi-house"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/design-patterns">
+                            <i class="bi bi-diagram-3"></i> Design Patterns
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-api"></i> APIs
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/api/users/json">JSON API</a></li>
+                            <li><a class="dropdown-item" href="/api/users/html">HTML API</a></li>
+                            <li><a class="dropdown-item" href="/api/users/xml">XML API</a></li>
+                            <li><a class="dropdown-item" href="/api/users/pdf">PDF API</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/health">
+                            <i class="bi bi-heart-pulse"></i> Health
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if current_user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> {{ current_user.name }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Enhanced Hero Section -->
+    <div class="hero-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto text-center hero-content">
+                    <h1 class="display-3 fw-bold mb-4">
+                        🚀 Enhanced Python OOP Web Application
+                    </h1>
+                    <p class="lead mb-4">
+                        Advanced demonstration of Object-Oriented Programming with Design Patterns, 
+                        Security Features, and Modern Web Architecture
+                    </p>
+                    
+                    <!-- Enhanced OOP Pillars Display -->
+                    <div class="row mt-5">
+                        <div class="col-6 col-md-3 mb-3">
+                            <div class="text-center">
+                                <i class="bi bi-shield-lock pillar-icon text-success"></i>
+                                <h6 class="fw-bold">Encapsulation</h6>
+                                <small>Security Manager<br>Bank Accounts</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 mb-3">
+                            <div class="text-center">
+                                <i class="bi bi-layers pillar-icon text-warning"></i>
+                                <h6 class="fw-bold">Abstraction</h6>
+                                <small>Data Services<br>Notifications</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 mb-3">
+                            <div class="text-center">
+                                <i class="bi bi-diagram-3 pillar-icon text-danger"></i>
+                                <h6 class="fw-bold">Inheritance</h6>
+                                <small>User Hierarchy<br>Account Types</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 mb-3">
+                            <div class="text-center">
+                                <i class="bi bi-shuffle pillar-icon text-info"></i>
+                                <h6 class="fw-bold">Polymorphism</h6>
+                                <small>Renderers<br>Processors</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- New Features Badges -->
+                    <div class="mt-4">
+                        <span class="feature-badge">🏭 Factory Pattern</span>
+                        <span class="feature-badge">👁️ Observer Pattern</span>
+                        <span class="feature-badge">🔒 Security Manager</span>
+                        <span class="feature-badge">💳 Payment Processing</span>
+                        <span class="feature-badge">📊 Advanced Analytics</span>
+                        <span class="feature-badge">🎯 Strategy Pattern</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Statistics Dashboard -->
+    <div class="container my-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="stats-card p-4 text-center">
+                    <h3 class="mb-4">📊 System Statistics</h3>
+                    <div class="row">
+                        <div class="col-6 col-md-3">
+                            <h4 class="fw-bold">{{ stats.total_users }}</h4>
+                            <small>Total Users</small>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <h4 class="fw-bold">{{ stats.students }}</h4>
+                            <small>Students</small>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <h4 class="fw-bold">{{ stats.teachers }}</h4>
+                            <small>Teachers</small>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <h4 class="fw-bold">{{ stats.notification_subscribers }}</h4>
+                            <small>Subscribers</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced OOP Concepts Section -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h2 class="text-center mb-5">
+                    🏛️ Advanced OOP Implementation
+                    <small class="text-muted d-block mt-2">Complete with Design Patterns & Modern Features</small>
+                </h2>
+            </div>
+            
+            <!-- Encapsulation Enhanced -->
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 oop-pillar encapsulation">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-shield-lock text-success"></i>
+                            🔐 Enhanced Encapsulation
+                        </h5>
+                        <p class="card-text">
+                            <strong>SecurityManager:</strong> Advanced encapsulation with private security data, 
+                            rate limiting, and controlled access through public methods.
+                        </p>
+                        <p class="card-text">
+                            <strong>BankAccount Hierarchy:</strong> CheckingAccount and SavingsAccount with 
+                            specialized features while maintaining data privacy.
+                        </p>
+                        <div class="code-snippet mt-3">
+                            <code>
+# Private security data<br>
+self.__login_attempts: Dict[str, List[datetime]]<br>
+self.__security_logs: List[Dict]<br>
+<br>
+# Public interface only<br>
+def validate_login_attempt(self, username, ip) -> bool
+                            </code>
+                        </div>
+                        <p class="text-muted small mt-2">
+                            <strong>Files:</strong> encapsulation/security_manager.py, encapsulation/bank_account.py<br>
+                            <strong>Features:</strong> Rate limiting, password hashing, transaction history
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Abstraction Enhanced -->
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 oop-pillar abstraction">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-layers text-warning"></i>
+                            🎭 Advanced Abstraction
+                        </h5>
+                        <p class="card-text">
+                            <strong>Multi-Service Architecture:</strong> StudentDataService, TeacherDataService, 
+                            and AdminDataService all implement the same abstract interface.
+                        </p>
+                        <p class="card-text">
+                            <strong>Notification Services:</strong> Email, SMS, and Push notifications through 
+                            unified abstract interface.
+                        </p>
+                        <div class="code-snippet mt-3">
+                            <code>
+# Abstract interface<br>
+@abstractmethod<br>
+def send_notification(self, recipient, message) -> Dict<br>
+<br>
+# Multiple implementations<br>
+EmailNotificationService, SMSNotificationService
+                            </code>
+                        </div>
+                        <p class="text-muted small mt-2">
+                            <strong>Files:</strong> abstraction/data_service.py, abstraction/notification_service.py<br>
+                            <strong>Features:</strong> Service abstraction, notification channels, data validation
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Inheritance Enhanced -->
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 oop-pillar inheritance">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-diagram-3 text-danger"></i>
+                            🧬 Advanced Inheritance
+                        </h5>
+                        <p class="card-text">
+                            <strong>Extended User Hierarchy:</strong> BaseUser → Student/GraduateStudent, 
+                            Teacher/Professor, Admin with specialized capabilities.
+                        </p>
+                        <p class="card-text">
+                            <strong>Account Inheritance:</strong> BankAccount → CheckingAccount (overdraft), 
+                            SavingsAccount (interest) with specialized features.
+                        </p>
+                        <div class="code-snippet mt-3">
+                            <code>
+class GraduateStudent(Student):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def get_research_area(self) -> str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def submit_thesis(self) -> bool<br>
+<br>
+class CheckingAccount(BankAccount):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, overdraft_limit: float)
+                            </code>
+                        </div>
+                        <p class="text-muted small mt-2">
+                            <strong>Files:</strong> inheritance/user_models.py, encapsulation/bank_account.py<br>
+                            <strong>Features:</strong> Multi-level inheritance, method overriding, specialized behavior
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Polymorphism Enhanced -->
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 oop-pillar polymorphism">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-shuffle text-info"></i>
+                            🔁 Advanced Polymorphism
+                        </h5>
+                        <p class="card-text">
+                            <strong>Multi-Format Renderers:</strong> HTML, JSON, XML, PDF renderers all 
+                            implementing the same render() interface.
+                        </p>
+                        <p class="card-text">
+                            <strong>Payment Processors:</strong> CreditCard, PayPal, BankTransfer processors 
+                            with unified payment interface.
+                        </p>
+                        <div class="code-snippet mt-3">
+                            <code>
+# Same interface, different implementations<br>
+renderer = renderers[format_type]<br>
+result = renderer.render(data)<br>
+<br>
+processor = payment_processors[type]<br>
+result = processor.process_payment(details)
+                            </code>
+                        </div>
+                        <p class="text-muted small mt-2">
+                            <strong>Files:</strong> polymorphism/renderers.py, polymorphism/payment_processors.py<br>
+                            <strong>Features:</strong> Runtime type selection, interchangeable objects, strategy pattern
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Design Patterns Section -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h2 class="text-center mb-4">🏭 Design Patterns Implementation</h2>
+            </div>
+            
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 oop-pillar design-patterns">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-gear text-info"></i>
+                            🏭 Factory & Singleton Patterns
+                        </h5>
+                        <p class="card-text">
+                            <strong>UserFactory:</strong> Creates different user types based on parameters.<br>
+                            <strong>DatabaseConnection:</strong> Singleton pattern for database management.<br>
+                            <strong>ConfigManager:</strong> Singleton for application configuration.
+                        </p>
+                        <div class="code-snippet mt-3">
+                            <code>
+# Factory Pattern<br>
+user = UserFactory.create_user('student', ...)<br>
+<br>
+# Singleton Pattern<br>
+db = DatabaseConnection()  # Always same instance
+                            </code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 oop-pillar design-patterns">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-eye text-info"></i>
+                            👁️ Observer & Strategy Patterns
+                        </h5>
+                        <p class="card-text">
+                            <strong>GradeNotificationSystem:</strong> Observer pattern for grade notifications.<br>
+                            <strong>GradingStrategy:</strong> Different grading algorithms (Standard, Curved, Pass/Fail).<br>
+                            <strong>PaymentStrategy:</strong> Multiple payment processing strategies.
+                        </p>
+                        <div class="code-snippet mt-3">
+                            <code>
+# Observer Pattern<br>
+grade_system.subscribe(student_observer)<br>
+<br>
+# Strategy Pattern<br>
+strategy = grading_strategies['curved']<br>
+final_grade = strategy.calculate_final_grade(grades)
+                            </code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Users Dashboard -->
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    👥 Enhanced User Management
+                    <small class="text-muted">(Inheritance + Polymorphism + Security)</small>
+                </h2>
+                <p class="text-muted mb-4">
+                    All users inherit from BaseUser but implement role-specific methods differently. 
+                    Enhanced with security features, permissions, and specialized account types.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for user in users %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card user-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            {% if user.role == 'Student' %}
+                                <i class="bi bi-person-badge text-primary me-2" style="font-size: 1.8rem;"></i>
+                            {% elif user.role == 'Graduate Student' %}
+                                <i class="bi bi-mortarboard text-primary me-2" style="font-size: 1.8rem;"></i>
+                            {% elif user.role == 'Teacher' %}
+                                <i class="bi bi-person-workspace text-success me-2" style="font-size: 1.8rem;"></i>
+                            {% elif user.role == 'Professor' %}
+                                <i class="bi bi-person-check text-success me-2" style="font-size: 1.8rem;"></i>
+                            {% else %}
+                                <i class="bi bi-person-gear text-warning me-2" style="font-size: 1.8rem;"></i>
+                            {% endif %}
+                            <div>
+                                <h5 class="card-title mb-0">{{ user.name }}</h5>
+                                <span class="badge bg-secondary">{{ user.role }}</span>
+                                {% if user.account_type %}
+                                <span class="badge bg-info">{{ user.account_type }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <p class="card-text">
+                            <strong>Username:</strong> {{ user.username }}<br>
+                            <strong>Email:</strong> {{ user.email }}<br>
+                            <strong>Details:</strong> {{ user.details }}
+                        </p>
+                        
+                        {% if user.permissions %}
+                        <div class="mb-3">
+                            <small class="text-muted">Permissions:</small><br>
+                            {% for permission in user.permissions[:3] %}
+                            <span class="badge bg-light text-dark">{{ permission }}</span>
+                            {% endfor %}
+                            {% if user.permissions|length > 3 %}
+                            <span class="badge bg-light text-dark">+{{ user.permissions|length - 3 }} more</span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="d-flex gap-2">
+                            {% if user.role in ['Student', 'Graduate Student'] %}
+                            <a href="/student/{{ user.username }}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-eye"></i> Profile
+                            </a>
+                            {% endif %}
+                            
+                            {% if current_user and current_user.role == 'Administrator' %}
+                            <button class="btn btn-outline-secondary btn-sm" onclick="manageUser('{{ user.username }}')">
+                                <i class="bi bi-gear"></i> Manage
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Enhanced Bank Accounts Section -->
+        {% if students %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    💰 Enhanced Banking System
+                    <small class="text-muted">(Encapsulation + Inheritance + Security)</small>
+                </h2>
+                <p class="text-muted mb-4">
+                    Different account types (Checking, Savings) with specialized features. 
+                    All transactions are secured and logged through encapsulated methods.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for student in students %}
+            {% if student._bank_account %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-bank"></i>
+                            {{ student.get_name() }}'s {{ student._bank_account.__class__.__name__ }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="card-text">
+                                    <strong>Account:</strong> {{ student._bank_account.get_account_number() }}<br>
+                                    <strong>Balance:</strong> ${{ "%.2f"|format(student._bank_account.get_balance()) }}<br>
+                                    <strong>Transactions:</strong> {{ student._bank_account.get_transaction_history()|length }}
+                                </p>
+                            </div>
+                            <div class="col-6">
+                                {% if student._bank_account.__class__.__name__ == 'CheckingAccount' %}
+                                <p class="text-info">
+                                    <i class="bi bi-credit-card"></i> <strong>Checking Features:</strong><br>
+                                    • Overdraft Protection<br>
+                                    • Debit Card Access<br>
+                                    • No Minimum Balance
+                                </p>
+                                {% elif student._bank_account.__class__.__name__ == 'SavingsAccount' %}
+                                <p class="text-success">
+                                    <i class="bi bi-piggy-bank"></i> <strong>Savings Features:</strong><br>
+                                    • Interest Earning<br>
+                                    • Higher Security<br>
+                                    • Growth Tracking
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Transaction Form -->
+                        <form class="transaction-form mt-3" data-username="{{ student.get_username() }}">
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <input type="number" class="form-control form-control-sm" 
+                                           name="amount" placeholder="Amount" step="0.01" min="0.01" required>
+                                </div>
+                                <div class="col-4">
+                                    <select class="form-select form-select-sm" name="type" required>
+                                        <option value="">Action...</option>
+                                        <option value="deposit">💰 Deposit</option>
+                                        <option value="withdraw">💸 Withdraw</option>
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <button type="submit" class="btn btn-success btn-sm w-100">
+                                        <i class="bi bi-arrow-repeat"></i> Process
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <div class="mt-3">
+                            <button class="btn btn-outline-info btn-sm" onclick="showTransactionHistory('{{ student.get_username() }}')">
+                                <i class="bi bi-clock-history"></i> History
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm" onclick="showAccountFeatures('{{ student.get_username() }}')">
+                                <i class="bi bi-info-circle"></i> Features
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Enhanced API Demo Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    🔗 Advanced Polymorphism APIs
+                    <small class="text-muted">(Multiple Output Formats + Payment Processing)</small>
+                </h2>
+                <p class="text-muted mb-4">
+                    Same data rendered in different formats using polymorphic renderers. 
+                    Plus payment processing with different providers.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-filetype-json text-primary" style="font-size: 2.5rem;"></i>
+                        <h5 class="card-title mt-2">JSON Renderer</h5>
+                        <p class="card-text">JsonRenderer.render() implementation</p>
+                        <a href="/api/users/json" class="btn btn-primary" target="_blank">
+                            <i class="bi bi-box-arrow-up-right"></i> View JSON
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-filetype-html text-success" style="font-size: 2.5rem;"></i>
+                        <h5 class="card-title mt-2">HTML Renderer</h5>
+                        <p class="card-text">HtmlRenderer.render() implementation</p>
+                        <a href="/api/users/html" class="btn btn-success" target="_blank">
+                            <i class="bi bi-box-arrow-up-right"></i> View HTML
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-filetype-xml text-warning" style="font-size: 2.5rem;"></i>
+                        <h5 class="card-title mt-2">XML Renderer</h5>
+                        <p class="card-text">XmlRenderer.render() implementation</p>
+                        <a href="/api/users/xml" class="btn btn-warning" target="_blank">
+                            <i class="bi bi-box-arrow-up-right"></i> View XML
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-file-earmark-pdf text-danger" style="font-size: 2.5rem;"></i>
+                        <h5 class="card-title mt-2">PDF Renderer</h5>
+                        <p class="card-text">PdfRenderer.render() implementation</p>
+                        <a href="/api/users/pdf" class="btn btn-danger" target="_blank">
+                            <i class="bi bi-box-arrow-up-right"></i> View PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Processing Demo -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h3 class="mb-3">💳 Payment Processing Demo (Polymorphism)</h3>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-credit-card text-primary" style="font-size: 2rem;"></i>
+                        <h6 class="card-title mt-2">Credit Card</h6>
+                        <button class="btn btn-primary btn-sm" onclick="processPayment('credit_card', 25.99)">
+                            Process $25.99
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-paypal text-info" style="font-size: 2rem;"></i>
+                        <h6 class="card-title mt-2">PayPal</h6>
+                        <button class="btn btn-info btn-sm" onclick="processPayment('paypal', 25.99)">
+                            Process $25.99
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-bank text-success" style="font-size: 2rem;"></i>
+                        <h6 class="card-title mt-2">Bank Transfer</h6>
+                        <button class="btn btn-success btn-sm" onclick="processPayment('bank_transfer', 25.99)">
+                            Process $25.99
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Footer -->
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>🐍 Enhanced OOP Python App</h5>
+                    <p class="mb-3">
+                        Complete demonstration of Object-Oriented Programming with 
+                        advanced design patterns and modern web features.
+                    </p>
+                    <div>
+                        <span class="badge bg-success me-1">Python 3.11+</span>
+                        <span class="badge bg-primary me-1">Flask</span>
+                        <span class="badge bg-info me-1">Bootstrap 5</span>
+                        <span class="badge bg-warning text-dark">OOP</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h6>🏛️ OOP Pillars</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-shield-lock text-success"></i> Encapsulation</li>
+                        <li><i class="bi bi-layers text-warning"></i> Abstraction</li>
+                        <li><i class="bi bi-diagram-3 text-danger"></i> Inheritance</li>
+                        <li><i class="bi bi-shuffle text-info"></i> Polymorphism</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6>🏭 Design Patterns</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-gear"></i> Factory & Singleton</li>
+                        <li><i class="bi bi-eye"></i> Observer</li>
+                        <li><i class="bi bi-diagram-2"></i> Strategy</li>
+                        <li><i class="bi bi-layers"></i> Abstract Factory</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">
+                        <i class="bi bi-code-square"></i>
+                        Built with modern Python practices and responsive design
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">
+                        <i class="bi bi-github"></i> Open Source Educational Project
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Enhanced JavaScript -->
+    <script>
+        // Enhanced transaction handling
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle transaction forms
+            document.querySelectorAll('.transaction-form').forEach(form => {
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(this);
+                    formData.append('username', this.dataset.username);
+                    
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Processing...';
+                    submitBtn.disabled = true;
+                    
+                    try {
+                        const response = await fetch('/transaction', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            showAlert(`Transaction successful! New balance: $${result.new_balance.toFixed(2)}`, 'success');
+                            setTimeout(() => location.reload(), 1500);
+                        } else {
+                            showAlert(`Transaction failed: ${result.error}`, 'danger');
+                        }
+                    } catch (error) {
+                        showAlert('Transaction failed: Network error', 'danger');
+                    } finally {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            });
+        });
+
+        // Enhanced payment processing
+        async function processPayment(processor, amount) {
+            const formData = new FormData();
+            formData.append('processor', processor);
+            formData.append('amount', amount);
+            formData.append('currency', 'USD');
+            formData.append('description', `Payment via ${processor}`);
+            
+            try {
+                const response = await fetch('/payment', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert(`Payment processed successfully via ${processor}! Transaction ID: ${result.transaction_id}`, 'success');
+                } else {
+                    showAlert(`Payment failed: ${result.error}`, 'danger');
+                }
+            } catch (error) {
+                showAlert('Payment processing failed: Network error', 'danger');
+            }
+        }
+
+        // User management functions
+        function manageUser(username) {
+            showAlert(`Managing user: ${username} (Admin feature)`, 'info');
+        }
+
+        function showTransactionHistory(username) {
+            showAlert(`Loading transaction history for ${username}...`, 'info');
+        }
+
+        function showAccountFeatures(username) {
+            showAlert(`Displaying account features for ${username}...`, 'info');
+        }
+
+        // Enhanced alert system
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Real-time statistics updates
+        function updateStatistics() {
+            fetch('/health')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'healthy') {
+                        console.log('System healthy:', data);
+                    }
+                })
+                .catch(error => console.log('Health check failed:', error));
+        }
+
+        // Update statistics every 30 seconds
+        setInterval(updateStatistics, 30000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inheritance Demo - OOP (CMPE 103) Learning Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a2e;
+            --accent-violet: #6c5ce7;
+            --accent-purple: #a29bfe;
+            --text-light: #ffffff;
+            --text-muted: #e2e8f0;
+            --card-bg: rgba(26, 26, 46, 0.95);
+            --border-color: rgba(108, 92, 231, 0.3);
+            --inheritance-color: #e84393;
+        }
+
+        body {
+            background: var(--primary-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(232, 67, 147, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(232, 67, 147, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 46, 0.98) !important;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .navbar-brand, .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--inheritance-color) !important;
+        }
+
+        .demo-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--inheritance-color) 100%);
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 30px 30px;
+        }
+
+        .inheritance-tree {
+            background: rgba(232, 67, 147, 0.1);
+            border: 2px solid var(--inheritance-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .tree-level {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tree-node {
+            background: rgba(232, 67, 147, 0.2);
+            border: 2px solid var(--inheritance-color);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-weight: bold;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .tree-node:hover {
+            background: rgba(232, 67, 147, 0.3);
+            transform: scale(1.05);
+        }
+
+        .tree-node.active {
+            background: var(--inheritance-color);
+            color: white;
+            box-shadow: 0 0 20px rgba(232, 67, 147, 0.5);
+        }
+
+        .tree-connector {
+            width: 2px;
+            height: 30px;
+            background: var(--inheritance-color);
+            margin: 0 auto;
+        }
+
+        .user-details {
+            background: rgba(232, 67, 147, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            min-height: 200px;
+        }
+
+        .method-demo {
+            background: rgba(232, 67, 147, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .inherited-method {
+            background: rgba(0, 212, 170, 0.1);
+            border-left: 4px solid #00d4aa;
+        }
+
+        .overridden-method {
+            background: rgba(253, 203, 110, 0.1);
+            border-left: 4px solid #fdcb6e;
+        }
+
+        .new-method {
+            background: rgba(232, 67, 147, 0.1);
+            border-left: 4px solid var(--inheritance-color);
+        }
+
+        .code-example {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        .btn-primary {
+            background: var(--inheritance-color);
+            border-color: var(--inheritance-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #d63384;
+            border-color: #d63384;
+        }
+
+        .navigation-controls {
+            background: rgba(232, 67, 147, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .logo-svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--accent-violet);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-light) !important;
+        }
+
+        p, li, span {
+            color: var(--text-light);
+        }
+
+        .alert-custom {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 500px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 9.739 9 11 5.16-1.261 9-5.45 9-11V7l-10-5z"/>
+                    <path d="M8 11l2 2 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+                OOP (CMPE 103) Learning Platform
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="bi bi-diagram-3" style="color: var(--inheritance-color);"></i>
+                Inheritance Interactive Demo
+            </h1>
+            <p class="lead">Explore class hierarchies and method inheritance in real-time</p>
+            <div class="badge bg-danger fs-6 px-3 py-2">Interactive Learning Experience</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="demo-container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <h3 class="mb-4">👥 Interactive Class Hierarchy Explorer</h3>
+                    <p class="lead">
+                        Click on different user types to see how inheritance works. Notice how child classes inherit from parents but add their own features!
+                    </p>
+
+                    <!-- Interactive Inheritance Tree -->
+                    <div class="inheritance-tree">
+                        <h5 class="text-center mb-4">🌳 User Class Hierarchy</h5>
+                        
+                        <!-- Level 1: Base Class -->
+                        <div class="tree-level">
+                            <div class="tree-node" data-class="BaseUser" onclick="selectClass('BaseUser')">
+                                <i class="bi bi-person"></i><br>
+                                BaseUser
+                            </div>
+                        </div>
+                        
+                        <div class="tree-connector"></div>
+                        
+                        <!-- Level 2: Direct Inheritance -->
+                        <div class="tree-level">
+                            <div class="tree-node" data-class="Student" onclick="selectClass('Student')">
+                                <i class="bi bi-person-badge"></i><br>
+                                Student
+                            </div>
+                            <div class="tree-node" data-class="Teacher" onclick="selectClass('Teacher')">
+                                <i class="bi bi-person-workspace"></i><br>
+                                Teacher
+                            </div>
+                            <div class="tree-node" data-class="Admin" onclick="selectClass('Admin')">
+                                <i class="bi bi-person-gear"></i><br>
+                                Admin
+                            </div>
+                        </div>
+                        
+                        <div class="tree-connector"></div>
+                        
+                        <!-- Level 3: Multi-level Inheritance -->
+                        <div class="tree-level">
+                            <div class="tree-node" data-class="GraduateStudent" onclick="selectClass('GraduateStudent')">
+                                <i class="bi bi-mortarboard"></i><br>
+                                GraduateStudent
+                            </div>
+                            <div class="tree-node" data-class="Professor" onclick="selectClass('Professor')">
+                                <i class="bi bi-person-check"></i><br>
+                                Professor
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Class Details Display -->
+                    <div class="user-details" id="classDetails">
+                        <h5>👆 Click on a class above to explore its inheritance</h5>
+                        <p class="text-muted">Select any class in the hierarchy to see its inherited methods, overridden methods, and new methods.</p>
+                    </div>
+
+                    <!-- Code Example -->
+                    <h4 class="mt-5 mb-3">📝 Live Code Example</h4>
+                    <div class="code-example" id="codeExample">
+# Click on a class above to see its implementation
+class BaseUser:
+    def __init__(self, username, email, full_name):
+        self._username = username
+        self._email = email
+        self._full_name = full_name
+    
+    def get_role(self):
+        return "User"
+    
+    def get_permissions(self):
+        return ["read"]
+                    </div>
+
+                    <!-- Method Inheritance Visualization -->
+                    <div class="inheritance-tree">
+                        <h5 class="mb-3">🔄 Method Inheritance Types</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="method-demo inherited-method">
+                                    <strong>🟢 Inherited Methods</strong><br>
+                                    <small>Used as-is from parent class</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="method-demo overridden-method">
+                                    <strong>🟡 Overridden Methods</strong><br>
+                                    <small>Redefined in child class</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="method-demo new-method">
+                                    <strong>🔴 New Methods</strong><br>
+                                    <small>Added by child class</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Controls -->
+                    <div class="navigation-controls">
+                        <h5 class="mb-3">🧭 Continue Your Learning Journey</h5>
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <a href="/inheritance-guide" class="btn btn-outline-light w-100">
+                                    <i class="bi bi-book"></i> Study Guide
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="/encapsulation-demo" class="btn btn-outline-light w-100">
+                                    <i class="bi bi-shield-lock"></i> Encapsulation Demo
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="/polymorphism-demo" class="btn btn-primary w-100">
+                                    <i class="bi bi-shuffle"></i> Polymorphism Demo
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="/abstraction-demo" class="btn btn-outline-light w-100">
+                                    <i class="bi bi-layers"></i> Abstraction Demo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const classData = {
+            BaseUser: {
+                description: "The foundation class that all users inherit from",
+                methods: {
+                    inherited: [],
+                    overridden: [],
+                    new: ["__init__()", "get_role()", "get_permissions()", "get_username()", "get_email()"]
+                },
+                code: `class BaseUser:
+    def __init__(self, username, email, full_name):
+        self._username = username
+        self._email = email
+        self._full_name = full_name
+    
+    def get_role(self):
+        return "User"  # Base implementation
+    
+    def get_permissions(self):
+        return ["read"]  # Basic permissions
+    
+    def get_username(self):
+        return self._username`,
+                features: ["Basic user properties", "Default role and permissions", "Common user methods"]
+            },
+            Student: {
+                description: "Inherits from BaseUser and adds student-specific functionality",
+                methods: {
+                    inherited: ["get_username()", "get_email()"],
+                    overridden: ["get_role()", "get_permissions()"],
+                    new: ["add_grade()", "get_grades()", "get_gpa()", "get_course()"]
+                },
+                code: `class Student(BaseUser):  # Inherits from BaseUser
+    def __init__(self, username, email, full_name, course):
+        super().__init__(username, email, full_name)  # Call parent
+        self._course = course
+        self._grades = {}
+    
+    def get_role(self):  # Override parent method
+        return "Student"
+    
+    def get_permissions(self):  # Override parent method
+        return ["read", "submit_assignments", "view_grades"]
+    
+    def add_grade(self, subject, grade):  # New method
+        self._grades[subject] = grade`,
+                features: ["Inherits basic user properties", "Overrides role and permissions", "Adds grade management", "Course enrollment"]
+            },
+            Teacher: {
+                description: "Inherits from BaseUser with teaching-specific capabilities",
+                methods: {
+                    inherited: ["get_username()", "get_email()"],
+                    overridden: ["get_role()", "get_permissions()"],
+                    new: ["add_course()", "get_courses()", "get_department()"]
+                },
+                code: `class Teacher(BaseUser):  # Inherits from BaseUser
+    def __init__(self, username, email, full_name, department):
+        super().__init__(username, email, full_name)
+        self._department = department
+        self._courses_taught = []
+    
+    def get_role(self):  # Override parent method
+        return "Teacher"
+    
+    def get_permissions(self):  # Override parent method
+        return ["read", "write", "grade_students", "manage_courses"]
+    
+    def add_course(self, course):  # New method
+        self._courses_taught.append(course)`,
+                features: ["Inherits basic user properties", "Enhanced permissions", "Course management", "Department association"]
+            },
+            Admin: {
+                description: "Inherits from BaseUser with administrative privileges",
+                methods: {
+                    inherited: ["get_username()", "get_email()"],
+                    overridden: ["get_role()", "get_permissions()"],
+                    new: ["has_permission()", "add_permission()", "get_access_level()"]
+                },
+                code: `class Admin(BaseUser):  # Inherits from BaseUser
+    def __init__(self, username, email, full_name, access_level):
+        super().__init__(username, email, full_name)
+        self._access_level = access_level
+        self._permissions = ["read", "write", "delete", "manage_users"]
+    
+    def get_role(self):  # Override parent method
+        return "Administrator"
+    
+    def get_permissions(self):  # Override parent method
+        return self._permissions.copy()
+    
+    def has_permission(self, permission):  # New method
+        return permission in self._permissions`,
+                features: ["Inherits basic user properties", "Full system permissions", "Access level control", "User management capabilities"]
+            },
+            GraduateStudent: {
+                description: "Multi-level inheritance: inherits from Student, which inherits from BaseUser",
+                methods: {
+                    inherited: ["get_username()", "get_email()", "add_grade()", "get_grades()"],
+                    overridden: ["get_role()", "get_permissions()"],
+                    new: ["submit_thesis()", "get_research_area()", "is_thesis_submitted()"]
+                },
+                code: `class GraduateStudent(Student):  # Inherits from Student
+    def __init__(self, username, email, full_name, research_area):
+        super().__init__(username, email, full_name, "Graduate Studies")
+        self._research_area = research_area
+        self._thesis_submitted = False
+    
+    def get_role(self):  # Override Student's method
+        return "Graduate Student"
+    
+    def get_permissions(self):  # Override Student's method
+        base_perms = super().get_permissions()
+        return base_perms + ["research", "thesis_submission"]
+    
+    def submit_thesis(self):  # New method
+        self._thesis_submitted = True`,
+                features: ["Multi-level inheritance", "Research capabilities", "Thesis management", "Enhanced student permissions"]
+            },
+            Professor: {
+                description: "Multi-level inheritance: inherits from Teacher, which inherits from BaseUser",
+                methods: {
+                    inherited: ["get_username()", "get_email()", "add_course()", "get_courses()"],
+                    overridden: ["get_role()", "get_permissions()"],
+                    new: ["is_tenured()", "grant_tenure()", "add_research_grant()"]
+                },
+                code: `class Professor(Teacher):  # Inherits from Teacher
+    def __init__(self, username, email, full_name, department, tenure=False):
+        super().__init__(username, email, full_name, department)
+        self._tenure = tenure
+        self._research_grants = []
+    
+    def get_role(self):  # Override Teacher's method
+        return "Professor"
+    
+    def get_permissions(self):  # Override Teacher's method
+        base_perms = super().get_permissions()
+        return base_perms + ["research", "supervise_students"]
+    
+    def is_tenured(self):  # New method
+        return self._tenure`,
+                features: ["Multi-level inheritance", "Tenure system", "Research supervision", "Enhanced teaching permissions"]
+            }
+        };
+
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show alert-custom`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        function selectClass(className) {
+            // Remove active class from all nodes
+            document.querySelectorAll('.tree-node').forEach(node => {
+                node.classList.remove('active');
+            });
+            
+            // Add active class to selected node
+            document.querySelector(`[data-class="${className}"]`).classList.add('active');
+            
+            const data = classData[className];
+            if (!data) return;
+            
+            // Update class details
+            const detailsHtml = `
+                <h5><i class="bi bi-info-circle"></i> ${className} Class Details</h5>
+                <p>${data.description}</p>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="method-demo inherited-method">
+                            <strong>🟢 Inherited (${data.methods.inherited.length})</strong><br>
+                            ${data.methods.inherited.map(method => `<small>• ${method}</small>`).join('<br>') || '<small>None</small>'}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="method-demo overridden-method">
+                            <strong>🟡 Overridden (${data.methods.overridden.length})</strong><br>
+                            ${data.methods.overridden.map(method => `<small>• ${method}</small>`).join('<br>') || '<small>None</small>'}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="method-demo new-method">
+                            <strong>🔴 New Methods (${data.methods.new.length})</strong><br>
+                            ${data.methods.new.map(method => `<small>• ${method}</small>`).join('<br>') || '<small>None</small>'}
+                        </div>
+                    </div>
+                </div>
+                
+                <h6 class="mt-3">Key Features:</h6>
+                <ul>
+                    ${data.features.map(feature => `<li>${feature}</li>`).join('')}
+                </ul>
+            `;
+            
+            document.getElementById('classDetails').innerHTML = detailsHtml;
+            document.getElementById('codeExample').textContent = data.code;
+            
+            showAlert(`🎯 Exploring ${className} class and its inheritance!`, 'info');
+        }
+
+        // Initialize with BaseUser selected
+        document.addEventListener('DOMContentLoaded', function() {
+            selectClass('BaseUser');
+        });
+    </script>
+</body>
+</html>
