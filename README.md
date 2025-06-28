@@ -10,7 +10,43 @@ A modular Python learning platform that teaches the four pillars of OOP—encaps
 ## Directory Structure
 
 ```
-
+oop_cmpe103_learning_platform/
+├── abstraction/
+│   └── data_service.py          # Handles data abstraction logic
+│   └── design_patterns/
+│       ├── factory.py           # Factory pattern example
+│       └── observer.py          # Observer pattern abstraction
+├── encapsulation/
+│   ├── bank_account.py          # Demonstrates private attributes and methods
+│   └── security_manager.py      # Encapsulates access control logic
+├── inheritance/
+│   └── user_models.py           # BaseUser and derived user types
+├── polymorphism/
+│   └── renderers.py             # Render behavior based on context (HTML/JSON)
+├── templates/                   # Jinja2 HTML templates
+│   ├── abstraction_demo.html
+│   ├── abstraction-demo.html
+│   ├── abstraction-guide.html
+│   ├── encapsulation-demo.html
+│   ├── encapsulation-guide.html
+│   ├── enhanced_index.html
+│   ├── error.html
+│   ├── ide.html
+│   ├── index.html
+│   ├── inheritance-demo.html
+│   ├── inheritance-guide.html
+│   ├── polymorphism-demo.html
+│   ├── polymorphism-guide.html
+│   └── student_profile.html
+├── app.py                       # Flask entry point
+├── Dockerfile                   # Container configuration
+├── LICENSE.txt
+├── Procfile                     # Heroku process types
+├── README.md
+├── requirements.txt             # Python dependencies
+├── runtime.txt                  # Python version for Heroku
+├── vercel.json                  # Vercel deployment config
+└── wsgi.py                      # For WSGI servers
 ```
 
 ## About the Author
