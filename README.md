@@ -8,6 +8,18 @@
 
 A modular Python learning platform that teaches the four pillars of OOP—[encapsulation](https://oop-cmpe103-learning-platform.vercel.app/encapsulation-guide), [abstraction](https://oop-cmpe103-learning-platform.vercel.app/abstraction-guide), [inheritance](https://oop-cmpe103-learning-platform.vercel.app/inheritance-guide), and [polymorphism](https://oop-cmpe103-learning-platform.vercel.app/polymorphism-guide)—through clear, real-world examples and structured code organization.
 
+
+## OOP Principle Mapping
+
+| OOP Pillar     | Directory          | Key Classes/Files                      |
+|----------------|--------------------|----------------------------------------|
+| [Encapsulation](https://oop-cmpe103-learning-platform.vercel.app/encapsulation-guide)  | [encapsulation/](https://github.com/johnmikx/oop_cmpe103_learning_platform/tree/main/encapsulation)   | BankAccount, SecurityManager       |
+| [Abstraction](https://oop-cmpe103-learning-platform.vercel.app/abstraction-guide)    | [abstraction/](https://github.com/johnmikx/oop_cmpe103_learning_platform/tree/main/abstraction)     | DataService, design patterns         |
+| [Inheritance](https://oop-cmpe103-learning-platform.vercel.app/inheritance-guide)    | [inheritance/](https://github.com/johnmikx/oop_cmpe103_learning_platform/tree/main/inheritance)     | BaseUser, StudentUser              |
+| [Polymorphism](https://oop-cmpe103-learning-platform.vercel.app/polymorphism-guide)   | [polymorphism/](https://github.com/johnmikx/oop_cmpe103_learning_platform/tree/main/polymorphism)    | HtmlRenderer, JsonRenderer         |
+
+
+
 ### Course Information
 
 - **Course:** `CMPE 103` Object Oriented Programming
