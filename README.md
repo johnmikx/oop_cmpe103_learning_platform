@@ -1,4 +1,12 @@
-A modular Python learning platform that teaches the four pillars of OOP—encapsulation, abstraction, inheritance, and polymorphism—through clear, real-world examples and structured code organization.
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=gradient"/>
+
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=venom&height=150&color=0:8871e5,100:b678c4&text=OOP%20Learning%20Platform&stroke=B4CCE7&strokeWidth=2&animation=twinkling"/>
+
+
+<img width="100%" height="50" src="https://i.imgur.com/dBaSKWF.gif"/>
+
+A modular Python learning platform that teaches the four pillars of OOP—[encapsulation](https://oop-cmpe103-learning-platform.vercel.app/encapsulation-guide), [abstraction](https://oop-cmpe103-learning-platform.vercel.app/abstraction-guide), [inheritance](https://oop-cmpe103-learning-platform.vercel.app/inheritance-guide), and [polymorphism](https://oop-cmpe103-learning-platform.vercel.app/polymorphism-guide)—through clear, real-world examples and structured code organization.
 
 ### Course Information
 
@@ -7,7 +15,7 @@ A modular Python learning platform that teaches the four pillars of OOP—encaps
 - **Author:** :ninja: **John Mike Asuncion** (BSCPE 1-2)
 - **Professor:** Engr. Danilo C. Madrigalejos, Jr.
 
-## Directory Structure
+## Final Project Directory Structure
 
 ```
 oop_cmpe103_learning_platform/
@@ -62,3 +70,5 @@ I'm always open to collaborations, learning opportunities, and connecting with f
 - 🔗 GitHub: [Mike's GitHub Profile](https://github.com/johnmikx)
 - 💼 DataCamp: [Mike's Portfolio](https://www.datacamp.com/portfolio/johnmikeasuncion17)
 - 🔗 Facebook: [Mike's Facebook Profile](https://www.facebook.com/mikekaizennn)
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=gradient&section=footer"/>
