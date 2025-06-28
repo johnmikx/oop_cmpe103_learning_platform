@@ -18,7 +18,16 @@ A modular Python learning platform that teaches the four pillars of OOP—[encap
 | [Inheritance](https://oop-cmpe103-learning-platform.vercel.app/inheritance-guide)    | [inheritance/](https://github.com/johnmikx/oop_cmpe103_learning_platform/tree/main/inheritance)     | BaseUser, StudentUser              |
 | [Polymorphism](https://oop-cmpe103-learning-platform.vercel.app/polymorphism-guide)   | [polymorphism/](https://github.com/johnmikx/oop_cmpe103_learning_platform/tree/main/polymorphism)    | HtmlRenderer, JsonRenderer         |
 
+<img width="100%" height="50" src="https://i.imgur.com/dBaSKWF.gif"/>
 
+### For Transparency :)
+
+<blockquote>
+  <h4><i>"In the past month, I have used Google, YouTube videos, and AI tools like ChatGPT to support and enrich my understanding of OOP concepts for this project. This was done responsibly and transparently to enhance my learning process."</i></h4>
+  <p>— Mike</p>
+</blockquote>
+
+<img width="100%" height="50" src="https://i.imgur.com/dBaSKWF.gif"/>
 
 ### Course Information
 
